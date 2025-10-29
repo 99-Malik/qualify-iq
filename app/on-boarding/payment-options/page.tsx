@@ -24,6 +24,27 @@ export default function PaymentOptions() {
         }));
     };
 
+    const handleCvcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // allow only digits, max length 3
+        const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 3);
+        setPaymentData(prev => ({ ...prev, cvc: digitsOnly }));
+    };
+
+    const handleExpirationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Format as MM/YY with auto-insert slash after 2 digits
+        let input = e.target.value.replace(/\D/g, '');
+        if (input.length > 4) input = input.slice(0, 4);
+
+        let formatted = input;
+        if (input.length >= 3) {
+            formatted = `${input.slice(0, 2)}/${input.slice(2)}`;
+        } else if (input.length >= 1) {
+            formatted = input;
+        }
+
+        setPaymentData(prev => ({ ...prev, expiration: formatted }));
+    };
+
     const handlePayment = () => {
         console.log('Processing payment...', paymentData);
         // Navigate to thank you page
@@ -189,8 +210,10 @@ export default function PaymentOptions() {
                                             id="expiration"
                                             name="expiration"
                                             value={paymentData.expiration}
-                                            onChange={handleInputChange}
+                                            onChange={handleExpirationChange}
                                             placeholder="MM/YY"
+                                            inputMode="numeric"
+                                            maxLength={5}
                                             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-[#E9EAEA] bg-transparent focus:outline-none focus:border-primary text-[#24282E] text-sm transition-colors"
                                         />
                                     </div>
@@ -203,8 +226,10 @@ export default function PaymentOptions() {
                                             id="cvc"
                                             name="cvc"
                                             value={paymentData.cvc}
-                                            onChange={handleInputChange}
+                                            onChange={handleCvcChange}
                                             placeholder="---"
+                                            inputMode="numeric"
+                                            maxLength={3}
                                             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 border-[#E9EAEA] bg-transparent focus:outline-none focus:border-primary text-[#24282E] text-sm transition-colors"
                                         />
                                     </div>
