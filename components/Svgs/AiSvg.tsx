@@ -12,8 +12,8 @@ const AiSvg = () => (
     <circle cx="69.2584" cy="46.5612" r="31.4323" fill="url(#pattern0_553_24261)" />
 </g>
 <defs>
-    <filter id="filter0_d_553_24261" x="-0.000926971" y="-20.5305" width="138.519" height="138.518" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+    <filter id="filter0_d_553_24261" x="-0.000926971" y="-20.5305" width="138.519" height="138.518" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
         <feOffset dy="2.16774" />
         <feGaussianBlur stdDeviation="18.9135" />

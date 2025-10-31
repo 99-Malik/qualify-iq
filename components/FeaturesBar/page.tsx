@@ -1,31 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-    FileText,
-    Upload,
-    Grid2X2,
-    CalendarDays,
-    Send,
-    Flame,
-    Plus,
-    Minus
-} from 'lucide-react';
-
+import { Plus, Minus } from 'lucide-react';
+import { GenerateForm, OutboundLeadsIcon, GenerateTemplateIcon, CalendarBookingIcon, EmailCampaignsIcon, WarmUpEmailsIcon } from '../Svgs/FeaturesBarSvg/FeaturesBarSvg';
 type Feature = {
     key: string;
     label: string;
     hotkey: string;
-    icon: React.ReactNode;
+    icon: (isActive: boolean) => React.ReactNode;
 };
 
 const features: Feature[] = [
-    { key: 'generate-form', label: 'Generate Form', hotkey: '/F', icon: <FileText size={18} /> },
-    { key: 'outbound-leads', label: 'Outbound Leads', hotkey: '/L', icon: <Upload size={18} /> },
-    { key: 'generate-template', label: 'Generate Template', hotkey: '/T', icon: <Grid2X2 size={18} /> },
-    { key: 'calendar-booking', label: 'Calendar Booking', hotkey: '/C', icon: <CalendarDays size={18} /> },
-    { key: 'email-campaigns', label: 'Email Campaigns', hotkey: '/E', icon: <Send size={18} /> },
-    { key: 'warmup-emails', label: 'Warmup Emails', hotkey: '/W', icon: <Flame size={18} /> }
+    { key: 'generate-form', label: 'Generate Form', hotkey: '/F', icon: (active) => <GenerateForm width={30} height={30} color={active ? '#5542F6' : '#84818A'} /> },
+    { key: 'outbound-leads', label: 'Outbound Leads', hotkey: '/L', icon: (active) => <OutboundLeadsIcon width={30} height={30} color={active ? '#5542F6' : '#84818A'} /> },
+    { key: 'generate-template', label: 'Generate Template', hotkey: '/T', icon: (active) => <GenerateTemplateIcon width={30} height={30} color={active ? '#5542F6' : '#84818A'} /> },
+    { key: 'calendar-booking', label: 'Calendar Booking', hotkey: '/C', icon: (active) => <CalendarBookingIcon width={30} height={30} color={active ? '#5542F6' : '#84818A'} /> },
+    { key: 'email-campaigns', label: 'Email Campaigns', hotkey: '/E', icon: (active) => <EmailCampaignsIcon width={30} height={30} color={active ? '#5542F6' : '#84818A'} /> },
+    { key: 'warmup-emails', label: 'Warmup Emails', hotkey: '/W', icon: (active) => <WarmUpEmailsIcon width={30} height={30} color={active ? '#5542F6' : '#84818A'} /> }
 ];
 
 type Props = {
@@ -33,7 +24,7 @@ type Props = {
 };
 
 export default function FeaturesBar({ onPick }: Props) {
-    const [activeKey, setActiveKey] = useState<string>('generate-form');
+    const [activeKey, setActiveKey] = useState<string | null>(null);
 
     return (
         <aside className="w-full max-w-sm h-full bg-white rounded-2xl border border-[#E4E7EC] shadow-[0_10px_30px_rgba(85,66,246,0.08)] p-5 flex flex-col">
@@ -51,30 +42,23 @@ export default function FeaturesBar({ onPick }: Props) {
                             key={f.key}
                             onClick={() => {
                                 setActiveKey(f.key);
-                                if (onPick) {
-                                    const hot = f.hotkey.replace('/', '').trim();
-                                    const display = `/ ${f.label} (${hot})`;
-                                    onPick(display);
-                                }
                             }}
-                            className={`w-full flex items-center justify-between rounded-xl border transition-colors ${
-                                isActive ? 'bg-[#F1EFFF] border-[#E1DEFF]' : 'bg-white border-[#E4E7EC] hover:bg-[#F7F8FA]'
-                            } px-4 py-4`}
+                            className={`w-full flex items-center justify-between rounded-md border transition-colors ${
+                                isActive ? 'bg-[#F1EFFF] border-[#E1DEFF]' : 'bg-white border-[#E3E1E5] border-2 hover:bg-[#F7F8FA]'
+                            } px-4 py-3`}
                         >
                             <div className="flex items-center gap-3">
-                                <div className={`w-9 h-9 rounded-lg grid place-items-center ${
-                                    isActive ? 'bg-primary/10 text-primary' : 'bg-[#F4F5FA] text-[#3A3541]'
-                                }`}>{f.icon}</div>
+                                <div className="grid place-items-center">{f.icon(isActive)}</div>
                                 <span className="text-[16px] font-medium text-[#24282E]">{f.label}</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className="text-sm text-[#24282E] bg-[#F4F5FA] border border-[#E4E7EC] px-3 py-1 rounded-md">
+                                <span className={`text-sm text-black font-bold px-3 py-1 rounded-md ${
+                                    isActive ? 'bg-white border-2 border-[#E3E1E5]' : 'bg-[#ebeaed] border-2 border-[#E3E1E5]'
+                                }`}>
                                     {f.hotkey}
                                 </span>
-                                <span className={`w-8 h-8 rounded-md border grid place-items-center ${
-                                    isActive ? 'border-[#C9C3FF] bg-[#EDEBFF]' : 'border-[#E4E7EC] bg-white'
-                                }`}>
-                                    {isActive ? <Minus size={16} className="text-[#3A3541]" /> : <Plus size={16} className="text-[#3A3541]" />}
+                                <span className={`w-8 h-8  grid place-items-center`}>
+                                    {isActive ? <Minus size={20} className="text-primary" /> : <Plus size={20} className="text-primary" />}
                                 </span>
                             </div>
                         </button>
@@ -85,7 +69,20 @@ export default function FeaturesBar({ onPick }: Props) {
             <div className="mt-6 h-px bg-[#EAECEF]"></div>
 
             <div className="mt-auto pt-5">
-                <button className="w-full h-12 rounded-xl bg-primary text-white text-[18px] font-semibold shadow-[0_12px_30px_rgba(85,66,246,0.35)]">
+                <button
+                    className={`w-full h-16 rounded-lg text-[18px] font-semibold shadow-[0_12px_30px_rgba(85,66,246,0.35)] ${
+                        activeKey ? 'bg-primary text-white' : 'bg-[#EAECEF] text-[#727A90] cursor-not-allowed'
+                    }`}
+                    disabled={!activeKey}
+                    onClick={() => {
+                        if (!activeKey || !onPick) return;
+                        const f = features.find((x) => x.key === activeKey);
+                        if (!f) return;
+                        const hot = f.hotkey.replace('/', '');
+                        const display = `/ ${f.label} (${hot})`;
+                        onPick(display);
+                    }}
+                >
                     Apply
                 </button>
             </div>

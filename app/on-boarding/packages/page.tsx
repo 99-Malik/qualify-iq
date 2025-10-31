@@ -273,9 +273,9 @@ export default function Packages() {
                                 {qualifiedLeadsCards.map((card, index) => (
                                 <div key={index} className="bg-white rounded-lg shadow-lg shadow-primary/30 p-6 border border-primary flex flex-col">
                                     <div className="mb-4">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <span className="text-xl font-bold text-primary">{card.price}</span>
-                                            <span className={`${card.labelColor} text-white px-3 py-2 rounded-md text-xs font-medium`}>
+                                        <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
+                                            <span className="text-base sm:text-xl lg:text-2xl font-bold text-primary leading-snug break-words">{card.price}</span>
+                                            <span className={`${card.labelColor} text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-[10px] sm:text-xs font-medium whitespace-nowrap shrink-0`}>
                                                 {card.label}
                                             </span>
                                         </div>

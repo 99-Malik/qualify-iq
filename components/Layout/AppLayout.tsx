@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import NavBar from '../NavBar/page';
 import SideBar from '../SideBar/SideBar';
 
@@ -8,49 +8,27 @@ type AppLayoutProps = {
     children: React.ReactNode;
     activeKey?: string;
     contentClassName?: string;
+    hideLogoForNav?: boolean;
 };
 
-export default function AppLayout({ children, activeKey, contentClassName }: AppLayoutProps) {
-    const [showSidebar, setShowSidebar] = useState(false);
-    const hideTimer = useRef<NodeJS.Timeout | null>(null);
-
-    const handleBrandHover = (hovering: boolean) => {
-        if (hovering) {
-            if (hideTimer.current) clearTimeout(hideTimer.current);
-            setShowSidebar(true);
-        } else {
-            hideTimer.current = setTimeout(() => setShowSidebar(false), 200);
-        }
-    };
-
-    const handleSidebarEnter = () => {
-        if (hideTimer.current) clearTimeout(hideTimer.current);
-        setShowSidebar(true);
-    };
-
-    const handleSidebarLeave = () => {
-        setShowSidebar(false);
-    };
-
+export default function AppLayout({ children, activeKey, contentClassName, hideLogoForNav }: AppLayoutProps) {
     return (
-        <div className="min-h-screen bg-[#FBFAFC]">
-            <NavBar isLoggedIn onBrandHover={handleBrandHover} />
+        <div className="min-h-screen bg-[#FBFAFC] flex flex-col">
+            <div className="flex flex-1">
+                {/* Always visible sidebar - starts from top */}
+                <aside className="w-auto h-screen sticky top-0 z-40">
+                    <SideBar activeKey={activeKey} />
+                </aside>
 
-            {/* Overlay sidebar */}
-            <div
-                className={`fixed top-0 left-0 h-full z-60 transition-transform duration-200 ${
-                    showSidebar ? 'translate-x-0' : '-translate-x-full'
-                }`}
-                onMouseEnter={handleSidebarEnter}
-                onMouseLeave={handleSidebarLeave}
-            >
-                <SideBar activeKey={activeKey} />
+                {/* Right section: Navbar + Content */}
+                <div className="flex-1 flex flex-col min-w-0">
+                    <NavBar isLoggedIn hideLogo={hideLogoForNav} />
+                    {/* Page content area */}
+                    <main className={`flex-1 px-4 sm:px-6 lg:px-8 flex flex-col pt-2 sm:pt-4 pb-4 sm:pb-8 ${contentClassName || ''}`}>
+                        {children}
+                    </main>
+                </div>
             </div>
-
-            {/* Page content area */}
-            <main className={`w-full px-8 flex flex-col min-h-[calc(100vh-64px)] pt-4 pb-8 ${contentClassName || ''}`}>
-                {children}
-            </main>
         </div>
     );
 }
