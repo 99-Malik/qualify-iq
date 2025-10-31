@@ -29,11 +29,12 @@ input[type="checkbox"].custom-checkbox:checked::after {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    width: 4px;
-    height: 8px;
+    width: 5px;
+    height: 9px;
     border: solid white;
-    border-width: 0 4px 4px 0;
+    border-width: 0 2.5px 2.5px 0;
+    transform: translate(-45%, -55%) rotate(45deg);
+    display: block;
 }
 
 :root {
