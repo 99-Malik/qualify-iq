@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
     Bolt,
     LayoutDashboard,
@@ -17,18 +17,21 @@ import {
     Settings as SettingsIcon,
     LogOut
 } from 'lucide-react';
-import {FlashIcon,GridIcon} from '../Svgs/SideBarSvg/SideBarSvg';
+import {FlashIcon,GridIcon,ListIcon} from '../Svgs/SideBarSvg/SideBarSvg';
 type SideBarProps = {
     activeKey?: string;
 };
 
 const sectionClass = 'text-xs uppercase text-[#9AA0A6] px-6 mt-6 mb-2';
 const itemBaseClass =
-    'flex items-center gap-2 px-4 py-3 mx-4 rounded-md text-sm text-[#2E2C34] font-semibold hover:bg-[#F4F5FA] transition-colors';
+    'flex items-center gap-2 px-4 py-3 mx-4 rounded-md text-sm text-[#2E2C34] font-semibold transition-colors';
 const itemActiveClass = 'bg-[#edecfe] text-[#2E2C34] font-semibold';
+const itemHoverClass = 'hover:bg-[#F4F5FA]';
 
-export default function SideBar({ activeKey = 'ai-assistant' }: SideBarProps) {
+export default function SideBar({ activeKey }: SideBarProps) {
     const router = useRouter();
+    const pathname = usePathname();
+    
     const items = [
         {
             header: 'Workspace',
@@ -40,7 +43,7 @@ export default function SideBar({ activeKey = 'ai-assistant' }: SideBarProps) {
         {
             header: 'Lead Management',
             entries: [
-                { key: 'forms', icon: (isActive: boolean) => <ClipboardList size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Forms Setup' },
+                { key: 'forms-setup', path: '/forms-setup', icon: (isActive: boolean) => <ListIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Forms Setup' },
                 { key: 'templates', icon: (isActive: boolean) => <Grid2X2 size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Templates' },
                 { key: 'captured', icon: (isActive: boolean) => <BarChart3 size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Captured Leads' },
                 { key: 'outbound', icon: (isActive: boolean) => <Upload size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Outbound Leads' }
@@ -64,8 +67,26 @@ export default function SideBar({ activeKey = 'ai-assistant' }: SideBarProps) {
         }
     ];
 
+    // Auto-detect active key from pathname if not provided
+    const getActiveKey = () => {
+        if (activeKey) return activeKey;
+        
+        // Find matching entry by path
+        for (const group of items) {
+            for (const entry of group.entries) {
+                if ((entry as any).path && pathname === (entry as any).path) {
+                    return entry.key;
+                }
+            }
+        }
+        
+        return 'ai-assistant'; // default
+    };
+    
+    const currentActiveKey = getActiveKey();
+
     return (
-        <aside className="h-screen w-[320px] bg-white border-r border-[#E4E7EC] flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.06)]">
+        <aside className="h-screen md:w-auto lg:w-[320px] bg-white border-r border-[#E4E7EC] flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.06)]">
             {/* Brand */}
             <div className="px-6 py-5 flex items-center gap-3">
                 <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
@@ -81,12 +102,12 @@ export default function SideBar({ activeKey = 'ai-assistant' }: SideBarProps) {
                         <div className={sectionClass}>{group.header}</div>
                         <div className="space-y-1">
                             {group.entries.map((entry) => {
-                                const isActive = activeKey === entry.key;
+                                const isActive = currentActiveKey === entry.key;
                                 return (
                                     <button
                                         key={entry.key}
                                         className={`${itemBaseClass} ${
-                                            isActive ? itemActiveClass : ''
+                                            isActive ? itemActiveClass : itemHoverClass
                                         } w-[90%]`}
                                         onClick={() => {
                                             if ((entry as any).path) {

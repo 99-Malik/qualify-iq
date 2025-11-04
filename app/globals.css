@@ -120,7 +120,7 @@ img {
 
   /* Make thumb visually shorter */
   border-top: 0px solid transparent; /* space at top */
-  border-bottom:5px solid transparent; /* space at bottom */
+  border-bottom:2px solid transparent; /* space at bottom */
   background-clip: padding-box;
 
   /* Keeps it narrow */

@@ -34,7 +34,7 @@ export default function TierOptions() {
                         {/* Tiers Tag */}
                         <div className="inline-block bg-primary text-white px-4 py-1.5 rounded-lg text-md font-medium mb-6 shadow-lg shadow-primary/50 hover:shadow-primary/70 transition-all duration-300">
                             Tiers
-                      </div>
+                        </div>
 
                         {/* Main Title */}
                         <h1 className="text-4xl font-bold mb-4">
@@ -60,29 +60,50 @@ export default function TierOptions() {
 
                                 {/* Package Name with Checkmark */}
                                 <div className="flex items-center space-x-2 mb-6">
-                                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect width="16" height="16" rx="8" fill="url(#paint0_linear_tier1)" />
-                                        <path d="M11.2473 4.93359L6.50316 9.67771L4.6342 7.80875L4 8.44295L6.50316 10.9461L11.8815 5.56779L11.2473 4.93359Z" fill="white" />
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="16" height="16" rx="8" fill="url(#paint0_linear_553_23829)" />
+                                        <g clip-path="url(#clip0_553_23829)">
+                                            <g clip-path="url(#clip1_553_23829)">
+                                                <g clip-path="url(#clip2_553_23829)">
+                                                    <g clip-path="url(#clip3_553_23829)">
+                                                        <path d="M11.2473 4.93359L6.50316 9.67771L4.6342 7.80875L4 8.44295L6.50316 10.9461L11.8815 5.56779L11.2473 4.93359Z" fill="white" />
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
                                         <defs>
-                                            <linearGradient id="paint0_linear_tier1" x1="16" y1="6.7435e-07" x2="6.7435e-07" y2="16" gradientUnits="userSpaceOnUse">
-                                                <stop stopColor="#59D963" />
-                                                <stop offset="1" stopColor="#26AE30" />
+                                            <linearGradient id="paint0_linear_553_23829" x1="16" y1="6.7435e-07" x2="6.7435e-07" y2="16" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#59D963" />
+                                                <stop offset="1" stop-color="#26AE30" />
                                             </linearGradient>
+                                            <clipPath id="clip0_553_23829">
+                                                <rect width="8" height="8" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip1_553_23829">
+                                                <rect width="1440" height="900" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip2_553_23829">
+                                                <rect width="8" height="8" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip3_553_23829">
+                                                <rect width="8" height="6.93333" fill="white" transform="translate(4 4.5332)" />
+                                            </clipPath>
                                         </defs>
                                     </svg>
+
                                     <span className="text-[#3A3541] font-medium">Validated lead package</span>
                                 </div>
                                 <div className='flex flex-col pl-8 '>
-                                {/* Email Packages List */}
-                                <div className="space-y-3 mb-6 flex-1">
-                                    {tier1Emails.map((item, index) => (
-                                        <div key={index} className="flex items-center space-x-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#3A3541]"></span>
-                                            <span className="text-[#3A3541]">{item.count} emails</span>
-                                            <span className="text-primary font-semibold ">{item.price}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                                    {/* Email Packages List */}
+                                    <div className="space-y-3 mb-6 flex-1">
+                                        {tier1Emails.map((item, index) => (
+                                            <div key={index} className="flex items-center space-x-2">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#3A3541]"></span>
+                                                <span className="text-[#3A3541]">{item.count} emails</span>
+                                                <span className="text-primary font-semibold ">{item.price}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                                 {/* Subscribe Button */}
                                 <button
@@ -103,28 +124,49 @@ export default function TierOptions() {
 
                                 {/* Package Name with Checkmark */}
                                 <div className="flex items-center space-x-2 mb-4">
-                                        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect width="16" height="16" rx="8" fill="url(#paint0_linear_tier2)" />
-                                                            <path d="M11.2473 4.93359L6.50316 9.67771L4.6342 7.80875L4 8.44295L6.50316 10.9461L11.8815 5.56779L11.2473 4.93359Z" fill="white" />
-                                            <defs>
-                                            <linearGradient id="paint0_linear_tier2" x1="16" y1="6.7435e-07" x2="6.7435e-07" y2="16" gradientUnits="userSpaceOnUse">
-                                                    <stop stopColor="#59D963" />
-                                                    <stop offset="1" stopColor="#26AE30" />
-                                                </linearGradient>
-                                            </defs>
-                                        </svg>
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="16" height="16" rx="8" fill="url(#paint0_linear_553_23829)" />
+                                        <g clip-path="url(#clip0_553_23829)">
+                                            <g clip-path="url(#clip1_553_23829)">
+                                                <g clip-path="url(#clip2_553_23829)">
+                                                    <g clip-path="url(#clip3_553_23829)">
+                                                        <path d="M11.2473 4.93359L6.50316 9.67771L4.6342 7.80875L4 8.44295L6.50316 10.9461L11.8815 5.56779L11.2473 4.93359Z" fill="white" />
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <defs>
+                                            <linearGradient id="paint0_linear_553_23829" x1="16" y1="6.7435e-07" x2="6.7435e-07" y2="16" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#59D963" />
+                                                <stop offset="1" stop-color="#26AE30" />
+                                            </linearGradient>
+                                            <clipPath id="clip0_553_23829">
+                                                <rect width="8" height="8" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip1_553_23829">
+                                                <rect width="1440" height="900" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip2_553_23829">
+                                                <rect width="8" height="8" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip3_553_23829">
+                                                <rect width="8" height="6.93333" fill="white" transform="translate(4 4.5332)" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+
                                     <span className="text-[#3A3541] font-medium">Qualified Leads package</span>
                                 </div>
                                 <div className='flex flex-col pl-8 flex-1'>
-                                {/* Description with Bullet */}
-                                <div className="flex items-start space-x-2 mb-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#3A3541] mt-1.5 flex-shrink-0"></span>
-                                    <p className="text-[#3A3541] text-sm">
-                                        Per vetted lead that meets financial criteria and interested in franchising. <span className='text-primary font-semibold'>$150</span>
-                                    </p>
-                                </div>
-                                
-                                
+                                    {/* Description with Bullet */}
+                                    <div className="flex items-start space-x-2 mb-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#3A3541] mt-1.5 flex-shrink-0"></span>
+                                        <p className="text-[#3A3541] text-sm">
+                                            Per vetted lead that meets financial criteria and interested in franchising. <span className='text-primary font-semibold'>$150</span>
+                                        </p>
+                                    </div>
+
+
                                 </div>
 
                                 {/* Subscribe Button */}
@@ -146,26 +188,47 @@ export default function TierOptions() {
 
                                 {/* Package Name with Checkmark */}
                                 <div className="flex items-center space-x-2 mb-4">
-                                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect width="16" height="16" rx="8" fill="url(#paint0_linear_tier3)" />
-                                        <path d="M11.2473 4.93359L6.50316 9.67771L4.6342 7.80875L4 8.44295L6.50316 10.9461L11.8815 5.56779L11.2473 4.93359Z" fill="white" />
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="16" height="16" rx="8" fill="url(#paint0_linear_553_23829)" />
+                                        <g clip-path="url(#clip0_553_23829)">
+                                            <g clip-path="url(#clip1_553_23829)">
+                                                <g clip-path="url(#clip2_553_23829)">
+                                                    <g clip-path="url(#clip3_553_23829)">
+                                                        <path d="M11.2473 4.93359L6.50316 9.67771L4.6342 7.80875L4 8.44295L6.50316 10.9461L11.8815 5.56779L11.2473 4.93359Z" fill="white" />
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
                                         <defs>
-                                            <linearGradient id="paint0_linear_tier3" x1="16" y1="6.7435e-07" x2="6.7435e-07" y2="16" gradientUnits="userSpaceOnUse">
-                                                <stop stopColor="#59D963" />
-                                                <stop offset="1" stopColor="#26AE30" />
+                                            <linearGradient id="paint0_linear_553_23829" x1="16" y1="6.7435e-07" x2="6.7435e-07" y2="16" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#59D963" />
+                                                <stop offset="1" stop-color="#26AE30" />
                                             </linearGradient>
+                                            <clipPath id="clip0_553_23829">
+                                                <rect width="8" height="8" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip1_553_23829">
+                                                <rect width="1440" height="900" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip2_553_23829">
+                                                <rect width="8" height="8" fill="white" transform="translate(4 4)" />
+                                            </clipPath>
+                                            <clipPath id="clip3_553_23829">
+                                                <rect width="8" height="6.93333" fill="white" transform="translate(4 4.5332)" />
+                                            </clipPath>
                                         </defs>
                                     </svg>
+
                                     <span className="text-[#3A3541] font-medium">Validated lead package</span>
                                 </div>
                                 <div className='flex flex-col pl-8 flex-1'>
-                                {/* Description */}
-                                <div className="flex items-start space-x-2 mb-6">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#3A3541] mt-1.5 flex-shrink-0"></span>
-                                    <p className="text-[#3A3541] text-sm flex-1">
-                                        Email campaign / scale model like other software's.
-                                    </p>
-                                </div>
+                                    {/* Description */}
+                                    <div className="flex items-start space-x-2 mb-6">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#3A3541] mt-1.5 flex-shrink-0"></span>
+                                        <p className="text-[#3A3541] text-sm flex-1">
+                                            Email campaign / scale model like other software's.
+                                        </p>
+                                    </div>
                                 </div>
                                 {/* Subscribe Button */}
                                 <button

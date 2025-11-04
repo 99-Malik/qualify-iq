@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import NavBar from '../NavBar/page';
 import SideBar from '../SideBar/SideBar';
 
@@ -9,16 +10,22 @@ type AppLayoutProps = {
     activeKey?: string;
     contentClassName?: string;
     hideLogoForNav?: boolean;
+    hideSidebar?: boolean;
 };
 
-export default function AppLayout({ children, activeKey, contentClassName, hideLogoForNav }: AppLayoutProps) {
+export default function AppLayout({ children, activeKey, contentClassName, hideLogoForNav, hideSidebar }: AppLayoutProps) {
+    // Show sidebar by default, only hide when explicitly set to true (wizard flows)
+    const showSidebar = !hideSidebar;
+    
     return (
         <div className="min-h-screen bg-[#FBFAFC] flex flex-col">
             <div className="flex flex-1">
-                {/* Always visible sidebar - starts from top */}
-                <aside className="w-auto h-screen sticky top-0 z-40">
-                    <SideBar activeKey={activeKey} />
-                </aside>
+                {/* Sidebar - visible by default, hidden only in wizard flows */}
+                {showSidebar && (
+                    <aside className="w-auto h-screen sticky top-0 z-40">
+                        <SideBar activeKey={activeKey} />
+                    </aside>
+                )}
 
                 {/* Right section: Navbar + Content */}
                 <div className="flex-1 flex flex-col min-w-0">
