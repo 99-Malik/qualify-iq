@@ -24,12 +24,23 @@ export default function FormPreview({ questions, showSubmitButton = false, hideH
             'long-description': 'My project /....'
         };
 
+        // Helper function to render HTML title
+        const renderTitle = (title: string | undefined, fallback: string) => {
+            const htmlContent = title || fallback;
+            // Check if content contains HTML tags
+            const hasHtml = /<[^>]+>/.test(htmlContent);
+            if (hasHtml) {
+                return <span dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+            }
+            return <span>{htmlContent}</span>;
+        };
+
         switch (question.type) {
             case 'text':
                 return (
                     <div key={question.id}>
                         <label className="block text-sm font-medium text-[#24282E] mb-3">
-                            {question.title || `Question ${index + 1}`}
+                            {renderTitle(question.title, `Question ${index + 1}`)}
                             {question.required && <span className="text-[#FC3400] ml-1">*</span>}
                         </label>
                         <input
@@ -46,7 +57,7 @@ export default function FormPreview({ questions, showSubmitButton = false, hideH
                 return (
                     <div key={question.id}>
                         <label className="block text-sm font-medium text-[#24282E] mb-3">
-                            {question.title || `Question ${index + 1}`}
+                            {renderTitle(question.title, `Question ${index + 1}`)}
                             {question.required && <span className="text-[#FC3400] ml-1">*</span>}
                         </label>
                         <input
@@ -63,7 +74,7 @@ export default function FormPreview({ questions, showSubmitButton = false, hideH
                 return (
                     <div key={question.id}>
                         <label className="block text-sm font-medium text-[#24282E] mb-3">
-                            {question.title || `Question ${index + 1}`}
+                            {renderTitle(question.title, `Question ${index + 1}`)}
                             {question.required && <span className="text-[#FC3400] ml-1">*</span>}
                         </label>
                         <input
@@ -80,7 +91,7 @@ export default function FormPreview({ questions, showSubmitButton = false, hideH
                 return (
                     <div key={question.id}>
                         <label className="block text-sm font-medium text-[#24282E] mb-3">
-                            {question.title || `Question ${index + 1}`}
+                            {renderTitle(question.title, `Question ${index + 1}`)}
                             {question.required && <span className="text-[#FC3400] ml-1">*</span>}
                         </label>
                         <PreviewDropdown
@@ -95,7 +106,7 @@ export default function FormPreview({ questions, showSubmitButton = false, hideH
                 return (
                     <div key={question.id}>
                         <label className="block text-sm font-medium text-[#24282E] mb-3">
-                            {question.title || `Question ${index + 1}`}
+                            {renderTitle(question.title, `Question ${index + 1}`)}
                             {question.required && <span className="text-[#FC3400] ml-1">*</span>}
                         </label>
                         <div className="space-y-3">
@@ -120,7 +131,7 @@ export default function FormPreview({ questions, showSubmitButton = false, hideH
                 return (
                     <div key={question.id}>
                         <label className="block text-sm font-medium text-[#24282E] mb-3">
-                            {question.title || `Question ${index + 1}`}
+                            {renderTitle(question.title, `Question ${index + 1}`)}
                             {question.required && <span className="text-[#FC3400] ml-1">*</span>}
                         </label>
                         <textarea
