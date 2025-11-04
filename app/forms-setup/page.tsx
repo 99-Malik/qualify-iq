@@ -9,20 +9,26 @@ import CreateShortForm from '../../components/Forms/FormTypes/CreateShortForm';
 import CreateLongForm from '../../components/Forms/FormTypes/CreateLongForm';
 import FormCard from '../../components/Forms/Components/FormCard';
 import UploadDocument from '../../components/Documents/UploadDocument';
+import DocumentCard from '../../components/Documents/DocumentCard';
 import { DocumentType } from '../../components/Documents/types';
 import { SavedForm, loadForm } from '../../components/Forms/utils/formStorage';
+import { SavedDocument, loadAllDocuments, loadDocument } from '../../components/Documents/utils/documentStorage';
 
 function FormsSetupContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const editFormId = searchParams.get('edit');
+    const editDocumentId = searchParams.get('edit-document');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedFormType, setSelectedFormType] = useState<string | null>(editFormId ? 'short-inquiry' : null);
+    const [selectedFormType, setSelectedFormType] = useState<string | null>(editFormId ? 'short-inquiry' : editDocumentId ? null : null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [forms, setForms] = useState<SavedForm[]>([]);
+    const [documents, setDocuments] = useState<SavedDocument[]>([]);
     const [editFormData, setEditFormData] = useState<SavedForm | null>(null);
+    const [editDocumentData, setEditDocumentData] = useState<SavedDocument | null>(null);
     const [isLoadingEditForm, setIsLoadingEditForm] = useState(false);
+    const [isLoadingEditDocument, setIsLoadingEditDocument] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -57,6 +63,19 @@ function FormsSetupContent() {
         }
     };
 
+    // Load documents from localStorage
+    const loadDocuments = () => {
+        if (typeof window !== 'undefined') {
+            try {
+                const allDocs = loadAllDocuments();
+                setDocuments(allDocs);
+            } catch (e) {
+                console.error('Error loading documents from localStorage:', e);
+                setDocuments([]);
+            }
+        }
+    };
+
     // Delete form handler
     const handleDeleteForm = (formId: string) => {
         if (typeof window !== 'undefined') {
@@ -76,39 +95,64 @@ function FormsSetupContent() {
         }
     };
 
+    // Delete document handler
+    const handleDeleteDocument = (documentId: string) => {
+        if (typeof window !== 'undefined') {
+            const savedDocuments = localStorage.getItem('documents');
+            if (savedDocuments) {
+                try {
+                    const docs = JSON.parse(savedDocuments);
+                    const updatedDocs = docs.filter((doc: SavedDocument) => doc.id !== documentId);
+                    localStorage.setItem('documents', JSON.stringify(updatedDocs));
+                    setDocuments(updatedDocs);
+                    // Dispatch custom event to notify other components
+                    window.dispatchEvent(new Event('documentSaved'));
+                } catch (e) {
+                    console.error('Error deleting document from localStorage:', e);
+                }
+            }
+        }
+    };
+
     useEffect(() => {
         loadForms();
+        loadDocuments();
         
         // Reload when window gets focus (when navigating back)
         const handleFocus = () => {
             loadForms();
+            loadDocuments();
         };
         
         window.addEventListener('focus', handleFocus);
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 loadForms();
+                loadDocuments();
             }
         });
 
         return () => {
             window.removeEventListener('focus', handleFocus);
         };
-    }, []); // Reload forms on mount
+    }, []); // Reload forms and documents on mount
 
     // Listen for storage changes (when form is saved from another tab/window)
     useEffect(() => {
         const handleStorageChange = () => {
             loadForms();
+            loadDocuments();
         };
 
         window.addEventListener('storage', handleStorageChange);
         // Also listen for custom event (when saved in same window)
         window.addEventListener('formSaved', handleStorageChange);
+        window.addEventListener('documentSaved', handleStorageChange);
 
         return () => {
             window.removeEventListener('storage', handleStorageChange);
             window.removeEventListener('formSaved', handleStorageChange);
+            window.removeEventListener('documentSaved', handleStorageChange);
         };
     }, []);
 
@@ -136,12 +180,31 @@ function FormsSetupContent() {
         }
     }, [editFormId]);
 
+    // Load document data for edit mode
+    useEffect(() => {
+        if (editDocumentId && typeof window !== 'undefined') {
+            setIsLoadingEditDocument(true);
+            try {
+                const foundDocument = loadDocument(editDocumentId);
+                if (foundDocument) {
+                    setEditDocumentData(foundDocument);
+                    setSelectedFormType(foundDocument.type);
+                } else {
+                    console.error('Document not found for edit:', editDocumentId);
+                }
+            } catch (e) {
+                console.error('Error loading document for edit:', e);
+            }
+            setIsLoadingEditDocument(false);
+        }
+    }, [editDocumentId]);
+
     // Show loading state if editing and still loading
-    if (editFormId && isLoadingEditForm && !editFormData) {
+    if ((editFormId && isLoadingEditForm && !editFormData) || (editDocumentId && isLoadingEditDocument && !editDocumentData)) {
         return (
             <AppLayout activeKey="forms-setup" hideSidebar={true}>
                 <div className="flex items-center justify-center py-16">
-                    <p className="text-lg text-[#727A90]">Loading form...</p>
+                    <p className="text-lg text-[#727A90]">Loading...</p>
                 </div>
             </AppLayout>
         );
@@ -207,7 +270,22 @@ function FormsSetupContent() {
             <AppLayout activeKey="forms-setup" hideSidebar={true}>
                 <UploadDocument 
                     documentType={selectedFormType as DocumentType}
-                    onBack={() => setSelectedFormType(null)} 
+                    editDocumentData={editDocumentData || undefined}
+                    onBack={() => {
+                        setSelectedFormType(null);
+                        setEditDocumentData(null);
+                        if (editDocumentId) {
+                            router.push('/forms-setup');
+                        }
+                    }}
+                    onDocumentSaved={() => {
+                        setSelectedFormType(null);
+                        setEditDocumentData(null);
+                        loadDocuments();
+                        if (editDocumentId) {
+                            router.push('/forms-setup');
+                        }
+                    }}
                 />
             </AppLayout>
         );
@@ -312,7 +390,7 @@ function FormsSetupContent() {
             </div>
 
             {/* Content Area */}
-            {forms.length === 0 ? (
+            {forms.length === 0 && documents.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 px-4">
                     <div className="text-center">
                         <p className="text-lg text-[#727A90] font-medium">No form created till now</p>
@@ -320,6 +398,7 @@ function FormsSetupContent() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2 gap-6 auto-rows-fr">
+                    {/* Render Forms */}
                     {forms.map((form) => (
                         <FormCard
                             key={form.id}
@@ -334,6 +413,22 @@ function FormsSetupContent() {
                                 router.push(`/forms-setup/forms-usage?id=${form.id}`);
                             }}
                             onDelete={() => handleDeleteForm(form.id)}
+                        />
+                    ))}
+                    {/* Render Documents */}
+                    {documents.map((document) => (
+                        <DocumentCard
+                            key={document.id}
+                            id={document.id}
+                            name={document.name}
+                            type={document.type}
+                            documentUrl={document.documentUrl}
+                            createdAt={document.createdAt}
+                            onUse={() => {
+                                // Navigate to document usage page (or similar to forms-usage)
+                                router.push(`/forms-setup/documents-usage?id=${document.id}`);
+                            }}
+                            onDelete={() => handleDeleteDocument(document.id)}
                         />
                     ))}
                 </div>

@@ -1,16 +1,19 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SignDocument from './SignDocument';
 import { DocumentType, getDocumentTypeConfig } from './types';
+import { SavedDocument } from './utils/documentStorage';
 
 interface UploadDocumentProps {
     documentType: DocumentType;
     onBack?: () => void;
+    editDocumentData?: SavedDocument;
+    onDocumentSaved?: () => void;
 }
 
-export default function UploadDocument({ documentType, onBack }: UploadDocumentProps) {
+export default function UploadDocument({ documentType, onBack, editDocumentData, onDocumentSaved }: UploadDocumentProps) {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [uploadedFile, setUploadedFile] = useState<{
@@ -20,6 +23,20 @@ export default function UploadDocument({ documentType, onBack }: UploadDocumentP
         url?: string;
     } | null>(null);
     const [showSignDocument, setShowSignDocument] = useState(false);
+
+    // Preload document data if in edit mode
+    useEffect(() => {
+        if (editDocumentData) {
+            setUploadedFile({
+                name: editDocumentData.name,
+                size: '0 mb', // Size not available from saved document
+                type: 'application/pdf',
+                url: editDocumentData.documentUrl,
+            });
+            // Automatically go to sign document view for editing
+            setShowSignDocument(true);
+        }
+    }, [editDocumentData]);
 
     const documentConfig = getDocumentTypeConfig(documentType);
 
@@ -67,12 +84,18 @@ export default function UploadDocument({ documentType, onBack }: UploadDocumentP
                 documentUrl={uploadedFile?.url}
                 documentName={uploadedFile?.name}
                 documentType={documentType}
-                onBack={() => setShowSignDocument(false)}
-                onConfirmAndSave={() => {
-                    // TODO: Implement save functionality
-                    console.log('Document confirmed and saved', documentType);
+                editDocumentData={editDocumentData}
+                onBack={() => {
                     setShowSignDocument(false);
-                    // Optionally show success message or navigate
+                    if (editDocumentData && onBack) {
+                        onBack();
+                    }
+                }}
+                onConfirmAndSave={() => {
+                    if (onDocumentSaved) {
+                        onDocumentSaved();
+                    }
+                    setShowSignDocument(false);
                 }}
             />
         );

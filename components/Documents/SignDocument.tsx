@@ -11,6 +11,7 @@ import { DocumentType, getDocumentTypeConfig } from './types';
 import { signingElementsData } from './signingElementsData';
 import type { SavedSignature } from './SigningProperties';
 import type { SavedStamp } from './PropertiesComponents/StampProperties';
+import { saveDocument, SignatureFieldData as SavedSignatureFieldData, SavedDocument } from './utils/documentStorage';
 
 interface SignatureFieldData {
     id: string;
@@ -33,15 +34,16 @@ interface SignDocumentProps {
     documentType: DocumentType;
     onBack?: () => void;
     onConfirmAndSave?: () => void;
+    editDocumentData?: SavedDocument;
 }
 
 
-export default function SignDocument({ documentUrl, documentName, documentType, onBack, onConfirmAndSave }: SignDocumentProps) {
+export default function SignDocument({ documentUrl, documentName, documentType, onBack, onConfirmAndSave, editDocumentData }: SignDocumentProps) {
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedElement, setSelectedElement] = useState<string>('signature');
     const previousElementRef = useRef<string>('signature');
-    const [signatureFields, setSignatureFields] = useState<SignatureFieldData[]>([]);
+    const [signatureFields, setSignatureFields] = useState<SignatureFieldData[]>(editDocumentData?.signatureFields || []);
     const [isDrawModalOpen, setIsDrawModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1); // Track current page for new signatures
     const [numPages, setNumPages] = useState(0); // Total number of pages
@@ -386,13 +388,42 @@ export default function SignDocument({ documentUrl, documentName, documentType, 
 
     const documentConfig = getDocumentTypeConfig(documentType);
 
-    const handleBack = () => {
-        if (onBack) {
-            onBack();
-        } else {
-            router.push('/forms-setup');
-        }
-    };
+        const handleBack = () => {
+            if (onBack) {
+                onBack();
+            } else {
+                router.push('/forms-setup');
+            }
+        };
+
+        const handleConfirmAndSave = () => {
+            if (!documentUrl || !documentName) {
+                console.error('Document URL or name is missing');
+                return;
+            }
+
+            try {
+                // Save the document with all signature fields
+                const savedDoc = saveDocument({
+                    documentId: editDocumentData?.id,
+                    name: documentName,
+                    type: documentType,
+                    documentUrl: documentUrl,
+                    signatureFields: signatureFields as SavedSignatureFieldData[],
+                    isEditMode: !!editDocumentData,
+                });
+
+                // Call the callback if provided
+                if (onConfirmAndSave) {
+                    onConfirmAndSave();
+                } else {
+                    // Navigate back to forms-setup page after saving
+                    router.push('/forms-setup');
+                }
+            } catch (error) {
+                console.error('Error saving document:', error);
+            }
+        };
 
     return (
         <div className="flex flex-col h-screen overflow-hidden">
@@ -439,7 +470,7 @@ export default function SignDocument({ documentUrl, documentName, documentType, 
                 </button>
 
                 <button
-                    onClick={onConfirmAndSave}
+                    onClick={handleConfirmAndSave}
                     className="flex items-center gap-2 px-4 py-2.5 bg-[#5542F6] text-white rounded-sm font-medium text-sm hover:bg-[#4535D6] transition-colors"
                 >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
