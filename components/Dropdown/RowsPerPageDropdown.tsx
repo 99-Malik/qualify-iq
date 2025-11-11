@@ -16,7 +16,10 @@ export default function RowsPerPageDropdown({
     className = ''
 }: RowsPerPageDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [openAbove, setOpenAbove] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -27,25 +30,91 @@ export default function RowsPerPageDropdown({
 
         if (isOpen) {
             document.addEventListener('mousedown', handleClickOutside);
+            
+            // Calculate position based on available space
+            const calculatePosition = () => {
+                if (buttonRef.current) {
+                    const buttonRect = buttonRef.current.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    // Estimate dropdown height: ~40px per option + 8px padding
+                    const estimatedDropdownHeight = options.length * 40 + 8;
+                    const spaceBelow = viewportHeight - buttonRect.bottom;
+                    const spaceAbove = buttonRect.top;
+                    
+                    // If not enough space below but enough space above, open upward
+                    if (spaceBelow < estimatedDropdownHeight && spaceAbove > estimatedDropdownHeight) {
+                        setOpenAbove(true);
+                    } else {
+                        setOpenAbove(false);
+                    }
+                }
+            };
+            
+            // Calculate position immediately
+            calculatePosition();
+            
+            // Refine position after dropdown renders with actual height
+            const refinePosition = () => {
+                if (buttonRef.current && panelRef.current) {
+                    const buttonRect = buttonRef.current.getBoundingClientRect();
+                    const panelRect = panelRef.current.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    const dropdownHeight = panelRect.height;
+                    const spaceBelow = viewportHeight - buttonRect.bottom;
+                    const spaceAbove = buttonRect.top;
+                    
+                    // Check if dropdown is currently positioned above or below based on its actual position
+                    const isCurrentlyAbove = panelRect.top < buttonRect.top;
+                    
+                    // If dropdown is below and gets cut off, try opening above
+                    if (!isCurrentlyAbove && spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
+                        setOpenAbove(true);
+                    } 
+                    // If dropdown is above and gets cut off, try opening below and scroll
+                    else if (isCurrentlyAbove && spaceAbove < dropdownHeight) {
+                        setOpenAbove(false);
+                        // Scroll to ensure dropdown is visible
+                        const scrollAmount = dropdownHeight - spaceBelow + 20;
+                        if (scrollAmount > 0) {
+                            window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+                        }
+                    }
+                    // If dropdown is below and gets cut off but can't open above, scroll
+                    else if (!isCurrentlyAbove && spaceBelow < dropdownHeight && spaceAbove < dropdownHeight) {
+                        const scrollAmount = dropdownHeight - spaceBelow + 20;
+                        if (scrollAmount > 0) {
+                            window.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+                        }
+                    }
+                }
+            };
+            
+            // Refine after a short delay to allow DOM to update
+            setTimeout(refinePosition, 0);
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [isOpen]);
+    }, [isOpen, options.length]);
 
     const handleSelect = (option: number) => {
         onChange(option);
         setIsOpen(false);
     };
 
+    const handleToggle = () => {
+        setIsOpen(!isOpen);
+    };
+
     return (
         <div className={`relative ${className}`} ref={dropdownRef}>
             {/* Input field */}
             <button
+                ref={buttonRef}
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                className={`w-full min-w-[80px] px-3 py-2 rounded-lg border text-sm text-[#24282E] bg-white hover:bg-[#F7F8FA] focus:outline-none focus:ring-2 focus:ring-[#EDECFE] transition-all duration-200 flex items-center justify-between ${
+                onClick={handleToggle}
+                className={`w-full min-w-[80px] px-3 py-1 rounded-lg border text-sm text-[#24282E] bg-white hover:bg-[#F7F8FA] focus:outline-none focus:ring-2 focus:ring-[#EDECFE] transition-all duration-200 flex items-center justify-between ${
                     isOpen ? 'border-[#D1CEFF] shadow-sm' : 'border-[#E4E7EC]'
                 }`}
             >
@@ -67,7 +136,12 @@ export default function RowsPerPageDropdown({
 
             {/* Dropdown panel */}
             {isOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full min-w-[80px] bg-white rounded-lg border border-[#E4E7EC] shadow-[0_4px_12px_rgba(0,0,0,0.15)] z-50 overflow-hidden">
+                <div
+                    ref={panelRef}
+                    className={`absolute left-0 w-full min-w-[80px] bg-white rounded-lg border border-[#E4E7EC] shadow-[0_4px_12px_rgba(0,0,0,0.15)] z-50 overflow-hidden ${
+                        openAbove ? 'bottom-full mb-1' : 'top-full mt-1'
+                    }`}
+                >
                     <div className="py-1">
                         {options.map((option) => (
                             <button

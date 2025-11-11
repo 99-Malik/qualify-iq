@@ -17,7 +17,7 @@ import {
     Settings as SettingsIcon,
     LogOut
 } from 'lucide-react';
-import {FlashIcon,GridIcon,ListIcon} from '../Svgs/SideBarSvg/SideBarSvg';
+import {FlashIcon,GridIcon,ListIcon,TemplatesIcon,CapturedLeadsIcon} from '../Svgs/SideBarSvg/SideBarSvg';
 type SideBarProps = {
     activeKey?: string;
 };
@@ -44,8 +44,8 @@ export default function SideBar({ activeKey }: SideBarProps) {
             header: 'Lead Management',
             entries: [
                 { key: 'forms-setup', path: '/forms-setup', icon: (isActive: boolean) => <ListIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Forms Setup' },
-                { key: 'templates', icon: (isActive: boolean) => <Grid2X2 size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Templates' },
-                { key: 'captured', icon: (isActive: boolean) => <BarChart3 size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Captured Leads' },
+                { key: 'templates', icon: (isActive: boolean) => <TemplatesIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Templates' },
+                { key: 'captured', path: '/captured-leads', icon: (isActive: boolean) => <CapturedLeadsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Captured Leads' },
                 { key: 'outbound', icon: (isActive: boolean) => <Upload size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Outbound Leads' }
             ]
         },

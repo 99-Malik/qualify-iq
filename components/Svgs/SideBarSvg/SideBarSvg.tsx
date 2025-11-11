@@ -82,3 +82,33 @@ export const ListIcon: React.FC<IconProps> = ({
     </svg>
   );
 };
+
+
+export const TemplatesIcon: React.FC<IconProps> = ({
+  width = 24,
+  height = 24,
+  color = '#84818A',
+  className,
+  style,
+}) => {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M3 3V11H11V3H3ZM9 9H5V5H9V9ZM3 13V21H11V13H3ZM9 19H5V15H9V19ZM13 3V11H21V3H13ZM19 9H15V5H19V9ZM13 13V21H21V13H13ZM19 19H15V15H19V19Z" fill="#84818A" />
+    </svg>
+  );
+};
+
+export const CapturedLeadsIcon: React.FC<IconProps> = ({
+  width = 24,
+  height = 24,
+  color = '#84818A',
+  className,
+  style,
+}) => {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.5 21H2V9H7.5V21ZM14.75 3H9.25V21H14.75V3ZM22 11H16.5V21H22V11Z" fill="#84818A" />
+    </svg>
+
+  );
+};

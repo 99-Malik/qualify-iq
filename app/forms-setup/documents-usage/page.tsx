@@ -20,6 +20,9 @@ function DocumentsUsageContent() {
                 const foundDocument = loadDocument(documentId);
                 if (foundDocument) {
                     setDocument(foundDocument);
+                } else {
+                    // Document not found or has invalid blob URL
+                    console.warn('Document not found or has invalid blob URL:', documentId);
                 }
             } catch (e) {
                 console.error('Error loading document:', e);
@@ -65,8 +68,13 @@ function DocumentsUsageContent() {
                 <div className="flex flex-col lg:flex-row lg:items-start gap-6 mb-6">
                     {/* Left: Document Info */}
                     <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                            <h2 className="text-xl font-bold text-[#24282E]">{document.name}</h2>
+                        <div className="flex items-center gap-3 mb-2 min-w-0">
+                            <h2 
+                                className="text-xl font-bold text-[#24282E] truncate" 
+                                title={document.name}
+                            >
+                                {document.name}
+                            </h2>
                             <span className="px-3 py-2 rounded-sm text-xs font-semibold bg-[#FFBEBE] text-black">
                                 {documentConfig.displayName}
                             </span>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import RowsPerPageDropdown from '../Dropdown/RowsPerPageDropdown';
+import Pagination from '../CapturedLeads/Tabs/Pagination';
 
 const leads = [
     { id: 'CLIENT-0024', name: 'Alice Smith', description: 'Overview of client requirements and...', budget: '$2000-$3000', date: '15 Jan 2022', stage: 'In Progress', stageColor: '#14B13B' },
@@ -139,7 +140,7 @@ export default function RecentLeadsTable() {
                         {paginatedLeads.map((lead, index) => (
                             <tr
                                 key={lead.id}
-                                className={`border-b border-[#E4E7EC] ${index % 2 === 1 ? 'bg-[#F8F8FC]' : 'bg-white'} hover:bg-[#F7F8FA] transition-colors`}
+                                className="border-b border-[#E4E7EC] bg-white hover:bg-[#F7F8FA] transition-colors"
                             >
                                 <td className="py-4 pl-4 pr-2">
                                     <div className="flex items-center gap-1.5">
@@ -178,53 +179,16 @@ export default function RecentLeadsTable() {
             </div>
 
             {/* Pagination */}
-            <div className="flex flex-col sm:flex-row justify-between items-center p-4 border-t border-[#E4E7EC] text-sm text-[#727A90] gap-3">
-                {/* Left text */}
-                <span>
-                    Showing {(currentPage - 1) * rowsPerPage + 1}–
-                    {Math.min(currentPage * rowsPerPage, leads.length)} from {leads.length}
-                </span>
-
-                {/* Pagination controls */}
-                <div className="flex items-center gap-2">
-                    {/* Previous button */}
-                    <button
-                        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                        disabled={currentPage === 1}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E4E7EC] hover:bg-[#F7F8FA] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.86015 12.3933L5.14015 8.66667C5.01598 8.54176 4.94629 8.3728 4.94629 8.19667C4.94629 8.02055 5.01598 7.85158 5.14015 7.72667L8.86015 4.00001C8.9534 3.90599 9.07253 3.84187 9.20236 3.81582C9.3322 3.78977 9.46684 3.80298 9.58914 3.85376C9.71143 3.90454 9.81584 3.99058 9.88904 4.10093C9.96224 4.21128 10.0009 4.34092 10.0002 4.47334V11.92C10.0009 12.0524 9.96224 12.1821 9.88904 12.2924C9.81584 12.4028 9.71143 12.4888 9.58914 12.5396C9.46684 12.5904 9.3322 12.6036 9.20236 12.5775C9.07253 12.5515 8.9534 12.4874 8.86015 12.3933Z" fill="#686F83" />
-                        </svg>
-                    </button>
-
-                    {/* Page numbers */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                        <button
-                            key={num}
-                            onClick={() => setCurrentPage(num)}
-                            className={`w-8 h-8 flex items-center justify-center rounded-lg border text-sm transition-colors ${
-                                num === currentPage
-                                    ? 'bg-[#EDECFE] text-[#5542F6] border-[#D1CEFF]'
-                                    : 'bg-white text-[#24282E] border-[#E4E7EC] hover:bg-[#F7F8FA]'
-                            }`}
-                        >
-                            {num}
-                        </button>
-                    ))}
-
-                    {/* Next button */}
-                    <button
-                        onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E4E7EC] hover:bg-[#F7F8FA] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.00001 13.92V6.47334C7.99924 6.34092 8.03792 6.21128 8.11112 6.10093C8.18432 5.99058 8.28873 5.90454 8.41102 5.85376C8.53332 5.80298 8.66797 5.78977 8.7978 5.81582C8.92763 5.84187 9.04677 5.90599 9.14001 6.00001L12.86 9.72667C12.9842 9.85158 13.0539 10.0205 13.0539 10.1967C13.0539 10.3728 12.9842 10.5418 12.86 10.6667L9.14001 14.3933C9.04677 14.4874 8.92763 14.5515 8.7978 14.5775C8.66797 14.6036 8.53332 14.5904 8.41102 14.5396C8.28873 14.4888 8.18432 14.4028 8.11112 14.2924C8.03792 14.1821 7.99924 14.0524 8.00001 13.92Z" fill="#686F83" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                itemsPerPage={rowsPerPage}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={(val) => {
+                    setRowsPerPage(val);
+                    setCurrentPage(1);
+                }}
+            />
         </div>
     );
 }

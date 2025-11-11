@@ -68,9 +68,14 @@ function FormsUsageContent() {
                 <div className="flex flex-col lg:flex-row lg:items-start gap-6 mb-6">
                     {/* Left: Form Info */}
                     <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                            <h2 className="text-xl font-bold text-[#24282E]">{form.title}</h2>
-                            <span className={`px-3 py-2 rounded-sm text-xs font-medium ${form.type === 'Short Form'
+                        <div className="flex items-center gap-3 mb-2 min-w-0">
+                            <h2 
+                                className="text-xl font-bold text-[#24282E] truncate" 
+                                title={form.title}
+                            >
+                                {form.title}
+                            </h2>
+                            <span className={`px-3 py-2 rounded-sm text-xs font-medium shrink-0 ${form.type === 'Short Form'
                                 ? 'bg-[#c8c2fc] text-black text-extrabold'
                                 : form.type === 'Long Form'
                                     ? 'bg-[#FFDFC0] text-black text-extrabold'

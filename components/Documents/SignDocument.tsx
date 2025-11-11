@@ -396,15 +396,15 @@ export default function SignDocument({ documentUrl, documentName, documentType, 
             }
         };
 
-        const handleConfirmAndSave = () => {
+        const handleConfirmAndSave = async () => {
             if (!documentUrl || !documentName) {
                 console.error('Document URL or name is missing');
                 return;
             }
 
             try {
-                // Save the document with all signature fields
-                const savedDoc = saveDocument({
+                // Save the document with all signature fields (now async to convert blob to base64)
+                const savedDoc = await saveDocument({
                     documentId: editDocumentData?.id,
                     name: documentName,
                     type: documentType,

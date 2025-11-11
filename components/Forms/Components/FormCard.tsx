@@ -45,14 +45,19 @@ export default function FormCard({ id, title, description, type, questions, crea
         <div className="bg-white border border-[#E4E7EC] rounded-lg p-6 flex flex-col h-full">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold text-[#24282E]">{title}</h3>
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2 min-w-0">
+                        <h3 
+                            className="text-xl font-bold text-[#24282E] truncate min-w-0" 
+                            title={title}
+                        >
+                            {title}
+                        </h3>
                     </div>
                     <p className="text-sm text-[#727A90]">{description}</p>
                 </div>
-                <div className="flex items-center gap-3 ml-4">
-                    <span className={`px-3 py-2 rounded-sm text-xs font-medium ${
+                <div className="flex items-center gap-3 ml-4 shrink-0">
+                    <span className={`px-3 py-2 rounded-sm text-xs font-medium shrink-0 ${
                         type === 'Short Form' 
                             ? 'bg-[#c8c2fc] text-black text-extrabold' 
                             : type === 'Long Form'

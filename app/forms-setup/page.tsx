@@ -1,6 +1,7 @@
 'use client';
 
 import AppLayout from '../../components/Layout/AppLayout';
+import FloatingAskAIButton from '../../components/Buttons/FloatingAskAIButton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { ChevronDown } from 'lucide-react';
@@ -435,16 +436,7 @@ function FormsSetupContent() {
             )}
 
             {/* Floating Ask AI Button */}
-            <button 
-                onClick={() => router.push('/ai-assistance')}
-                className="fixed bottom-24 right-12 bg-primary text-white rounded-md px-6 py-4 shadow-lg hover:bg-[#4535D6] transition-colors flex items-center gap-1 z-50"
-            >
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.16602 2.3335V15.1668H11.666V25.6668L19.8327 11.6668H15.166L19.8327 2.3335H8.16602Z" fill="white" />
-                </svg>
-
-                <span className="font-medium text-md">Ask AI</span>
-            </button>
+            <FloatingAskAIButton />
 
             {/* Create Forms Modal */}
             <CreateFormsModal

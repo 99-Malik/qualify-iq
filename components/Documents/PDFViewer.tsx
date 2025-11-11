@@ -62,24 +62,75 @@ export default function PDFViewer({ url, scale = 1.5, onLoadComplete, showAllPag
                 
                 console.log('Loading PDF from URL:', url);
                 
-                // Convert blob URL to ArrayBuffer for better compatibility
-                let pdfData: ArrayBuffer | string = url;
+                // Handle different URL types
+                let pdfData: ArrayBuffer | string | Uint8Array = url;
+                let useSrc = false;
                 
                 if (url.startsWith('blob:')) {
+                    // Blob URL - try to fetch as ArrayBuffer
                     try {
                         const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch blob: ${response.statusText}`);
+                        }
                         pdfData = await response.arrayBuffer();
                     } catch (fetchError) {
-                        console.warn('Failed to fetch blob as ArrayBuffer, using URL directly:', fetchError);
-                        pdfData = url;
+                        // If blob fetch fails, the blob URL is invalid (e.g., after page reload)
+                        // This means the document wasn't saved with base64 data
+                        console.error('Invalid blob URL detected. The document needs to be re-uploaded:', fetchError);
+                        throw new Error('This document is no longer available. Please re-upload the PDF file. The previous blob URL has expired.');
                     }
+                } else if (url.startsWith('data:')) {
+                    // Base64 data URL - convert to ArrayBuffer for better compatibility
+                    try {
+                        // Extract base64 part from data URL (format: data:application/pdf;base64,<base64data>)
+                        const base64Match = url.match(/^data:application\/pdf;base64,(.+)$/);
+                        if (base64Match && base64Match[1]) {
+                            // Convert base64 string to binary string
+                            const binaryString = atob(base64Match[1]);
+                            // Convert binary string to ArrayBuffer
+                            const bytes = new Uint8Array(binaryString.length);
+                            for (let i = 0; i < binaryString.length; i++) {
+                                bytes[i] = binaryString.charCodeAt(i);
+                            }
+                            pdfData = bytes.buffer;
+                        } else {
+                            // Try alternative format: data:application/pdf;base64,<data> or just data:;base64,<data>
+                            const altMatch = url.match(/^data:.*?;base64,(.+)$/);
+                            if (altMatch && altMatch[1]) {
+                                const binaryString = atob(altMatch[1]);
+                                const bytes = new Uint8Array(binaryString.length);
+                                for (let i = 0; i < binaryString.length; i++) {
+                                    bytes[i] = binaryString.charCodeAt(i);
+                                }
+                                pdfData = bytes.buffer;
+                            } else {
+                                // Fallback: use URL directly (might not work, but worth trying)
+                                console.warn('Could not parse data URL format, using directly');
+                                useSrc = true;
+                            }
+                        }
+                    } catch (dataUrlError) {
+                        console.error('Error converting data URL to ArrayBuffer:', dataUrlError);
+                        // Fallback: try using src parameter instead
+                        useSrc = true;
+                    }
+                } else {
+                    // Regular URL (http/https) - use src parameter
+                    useSrc = true;
                 }
                 
-                const loadingTask = pdfjsLib.getDocument({ 
-                    data: pdfData,
-                    disableAutoFetch: false,
-                    disableStream: false
-                });
+                const loadingTask = useSrc 
+                    ? pdfjsLib.getDocument({
+                        url: url,
+                        disableAutoFetch: false,
+                        disableStream: false
+                    })
+                    : pdfjsLib.getDocument({ 
+                        data: pdfData,
+                        disableAutoFetch: false,
+                        disableStream: false
+                    });
                 
                 const pdf = await loadingTask.promise;
 
@@ -94,7 +145,16 @@ export default function PDFViewer({ url, scale = 1.5, onLoadComplete, showAllPag
                 setIsLoading(false);
             } catch (error: any) {
                 console.error('Error loading PDF:', error);
-                setError(error?.message || 'Failed to load PDF. Please try again.');
+                // Provide more helpful error messages
+                let errorMessage = 'Failed to load PDF. Please try again.';
+                if (error?.message?.includes('blob URL has expired') || error?.message?.includes('Invalid blob URL')) {
+                    errorMessage = 'This document is no longer available. The file needs to be re-uploaded.';
+                } else if (error?.message?.includes('InvalidPDFException') || error?.name === 'InvalidPDFException') {
+                    errorMessage = 'Invalid PDF file. Please try uploading the PDF again or use a different file.';
+                } else if (error?.message) {
+                    errorMessage = error.message;
+                }
+                setError(errorMessage);
                 setIsLoading(false);
             }
         };
