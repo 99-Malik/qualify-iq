@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Pagination from './Pagination';
+import ViewNotesModal from '../Modals/ViewNotes';
 
 interface Lead {
     id: string;
@@ -39,6 +40,7 @@ export default function RejectedLeads() {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
+    const [viewNotesOpen, setViewNotesOpen] = useState(false);
 
     // Filter leads to only show Rejected and filter by search query
     const filteredLeads = leads.filter(lead =>
@@ -148,13 +150,20 @@ export default function RejectedLeads() {
                                     <span className="font-medium text-[14px] leading-[20px] text-[#24282E]">{lead.date}</span>
                                 </td>
                                 <td className="py-4 px-4">
-                                    {/* View Details column - no header */}
-                                    <button
-                                        onClick={() => router.push(`/captured-leads/lead-details?id=${lead.id}`)}
-                                        className="text-[#5542F6] hover:text-[#4535D6] transition-colors text-sm font-medium"
-                                    >
-                                        View Details
-                                    </button>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setViewNotesOpen(true)}
+                                            className="text-[#5542F6] hover:text-[#4535D6] transition-colors text-sm font-medium"
+                                        >
+                                            View Notes
+                                        </button>
+                                        <button
+                                            onClick={() => router.push(`/captured-leads/lead-details?id=${lead.id}`)}
+                                            className="text-[#5542F6] hover:text-[#4535D6] transition-colors text-sm font-medium"
+                                        >
+                                            View Details
+                                        </button>
+                                    </div>
                                 </td>
                                 <td className="py-4 px-4">
                                     {/* Trash icon column - no header */}
@@ -180,6 +189,12 @@ export default function RejectedLeads() {
                     setRowsPerPage(val);
                     setCurrentPage(1);
                 }}
+            />
+
+            {/* View Notes Modal */}
+            <ViewNotesModal
+                isOpen={viewNotesOpen}
+                onClose={() => setViewNotesOpen(false)}
             />
         </div>
     );

@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "framer-motion": "^12.23.24",
     "libphonenumber-js": "^1.12.25",
     "lucide-react": "^0.548.0",

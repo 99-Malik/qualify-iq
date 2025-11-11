@@ -3,6 +3,8 @@
 import React, { useState, useRef } from 'react';
 import Pagination from './Pagination';
 import PopUp from './PopUp/page';
+import ViewNotesModal from '../Modals/ViewNotes';
+import JourneyModal from '../Modals/JourneyModal';
 
 interface Lead {
     id: string;
@@ -42,6 +44,8 @@ export default function PendingFDDLeads() {
     const [openPopupId, setOpenPopupId] = useState<string | null>(null);
     const [popupPosition, setPopupPosition] = useState<{ top: number; left: number; alignRight?: boolean }>({ top: 0, left: 0 });
     const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+    const [viewNotesOpen, setViewNotesOpen] = useState(false);
+    const [journeyModalOpen, setJourneyModalOpen] = useState(false);
 
     // Filter leads to only show FDD Signed and filter by search query
     const filteredLeads = leads.filter(lead =>
@@ -231,6 +235,10 @@ export default function PendingFDDLeads() {
                                                 onClose={() => setOpenPopupId(null)}
                                                 position={popupPosition}
                                                 leadId={lead.id}
+                                                onJourneyMap={() => {
+                                                    setOpenPopupId(null);
+                                                    setJourneyModalOpen(true);
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -251,6 +259,16 @@ export default function PendingFDDLeads() {
                     setRowsPerPage(val);
                     setCurrentPage(1);
                 }}
+            />
+
+            {/* View Notes Modal */}
+            <ViewNotesModal
+                isOpen={viewNotesOpen}
+                onClose={() => setViewNotesOpen(false)}
+            />
+            <JourneyModal
+                isOpen={journeyModalOpen}
+                onClose={() => setJourneyModalOpen(false)}
             />
         </div>
     );

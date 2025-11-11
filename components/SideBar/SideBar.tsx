@@ -17,7 +17,7 @@ import {
     Settings as SettingsIcon,
     LogOut
 } from 'lucide-react';
-import {FlashIcon,GridIcon,ListIcon,TemplatesIcon,CapturedLeadsIcon} from '../Svgs/SideBarSvg/SideBarSvg';
+import {FlashIcon,GridIcon,ListIcon,TemplatesIcon,CapturedLeadsIcon,MailBoxIcon} from '../Svgs/SideBarSvg/SideBarSvg';
 type SideBarProps = {
     activeKey?: string;
 };
@@ -52,7 +52,7 @@ export default function SideBar({ activeKey }: SideBarProps) {
         {
             header: 'Communication',
             entries: [
-                { key: 'mailbox', icon: (isActive: boolean) => <Mail size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Mail Box' },
+                { key: 'mailbox', path: '/mail-box', icon: (isActive: boolean) => <MailBoxIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Mail Box' },
                 { key: 'campaigns', icon: (isActive: boolean) => <Mailbox size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Email Campaigns' },
                 { key: 'warmup', icon: (isActive: boolean) => <Flame size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Warmup Emails' },
                 { key: 'domain', icon: (isActive: boolean) => <Globe size={16} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Domain Setup' }
@@ -71,11 +71,14 @@ export default function SideBar({ activeKey }: SideBarProps) {
     const getActiveKey = () => {
         if (activeKey) return activeKey;
         
-        // Find matching entry by path
+        // Find matching entry by path (check if pathname starts with the entry path for nested routes)
         for (const group of items) {
             for (const entry of group.entries) {
-                if ((entry as any).path && pathname === (entry as any).path) {
-                    return entry.key;
+                if ((entry as any).path) {
+                    // Check exact match or if pathname starts with the entry path (for nested routes)
+                    if (pathname === (entry as any).path || pathname.startsWith((entry as any).path + '/')) {
+                        return entry.key;
+                    }
                 }
             }
         }

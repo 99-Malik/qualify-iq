@@ -4,6 +4,9 @@ import React, { useState, useRef } from 'react';
 import Pagination from './Pagination';
 import PopUp from './PopUp/page';
 import BookCallModal from '../Modals/BookCallModal';
+import ScheduledModal from '../Modals/SchudledModal';
+import ViewNotesModal from '../Modals/ViewNotes';
+import JourneyModal from '../Modals/JourneyModal';
 
 interface Lead {
     id: string;
@@ -60,6 +63,10 @@ export default function AllLeads() {
     const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
     const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+    const [scheduledModalOpen, setScheduledModalOpen] = useState(false);
+    const [bookingData, setBookingData] = useState<{ selectedDate: Date | null; selectedTime: string; selectedTimezone: string } | null>(null);
+    const [viewNotesOpen, setViewNotesOpen] = useState(false);
+    const [journeyModalOpen, setJourneyModalOpen] = useState(false);
 
     // Filter leads based on search query
     const filteredLeads = leads.filter(lead =>
@@ -265,6 +272,10 @@ export default function AllLeads() {
                                                 onClose={() => setOpenPopupId(null)}
                                                 position={popupPosition}
                                                 leadId={lead.id}
+                                                onJourneyMap={() => {
+                                                    setOpenPopupId(null);
+                                                    setJourneyModalOpen(true);
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -294,9 +305,31 @@ export default function AllLeads() {
                     setBookCallModalOpen(false);
                     setSelectedLead(null);
                 }}
+                onBooked={(data) => {
+                    setBookingData(data);
+                    setScheduledModalOpen(true);
+                }}
                 leadId={selectedLead?.id}
                 leadName={selectedLead?.name}
                 companyName={selectedLead?.company}
+            />
+            <ScheduledModal
+                isOpen={scheduledModalOpen}
+                onClose={() => {
+                    setScheduledModalOpen(false);
+                    setBookingData(null);
+                }}
+                selectedDate={bookingData?.selectedDate || null}
+                selectedTime={bookingData?.selectedTime || ''}
+                selectedTimezone={bookingData?.selectedTimezone || 'UTC'}
+            />
+            <ViewNotesModal
+                isOpen={viewNotesOpen}
+                onClose={() => setViewNotesOpen(false)}
+            />
+            <JourneyModal
+                isOpen={journeyModalOpen}
+                onClose={() => setJourneyModalOpen(false)}
             />
         </div>
     );

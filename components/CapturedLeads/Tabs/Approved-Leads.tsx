@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Pagination from './Pagination';
 import BookCallModal from '../Modals/BookCallModal';
+import ScheduledModal from '../Modals/SchudledModal';
+import ViewNotesModal from '../Modals/ViewNotes';
 
 interface Lead {
     id: string;
@@ -41,6 +43,9 @@ export default function ApprovedLeads() {
     const [searchQuery, setSearchQuery] = useState('');
     const [bookCallModalOpen, setBookCallModalOpen] = useState(false);
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+    const [scheduledModalOpen, setScheduledModalOpen] = useState(false);
+    const [bookingData, setBookingData] = useState<{ selectedDate: Date | null; selectedTime: string; selectedTimezone: string } | null>(null);
+    const [viewNotesOpen, setViewNotesOpen] = useState(false);
 
     // Filter leads to only show Approved and filter by search query
     const filteredLeads = leads.filter(lead =>
@@ -175,13 +180,20 @@ export default function ApprovedLeads() {
                                     </button>
                                 </td>
                                 <td className="py-4 px-4">
-                                    {/* View Details column - no header */}
-                                    <button
-                                        onClick={() => router.push(`/captured-leads/lead-details?id=${lead.id}`)}
-                                        className="text-[#5542F6] hover:text-[#4535D6] transition-colors text-sm font-medium"
-                                    >
-                                        View Details
-                                    </button>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setViewNotesOpen(true)}
+                                            className="text-[#5542F6] hover:text-[#4535D6] transition-colors text-sm font-medium"
+                                        >
+                                            View Notes
+                                        </button>
+                                        <button
+                                            onClick={() => router.push(`/captured-leads/lead-details?id=${lead.id}`)}
+                                            className="text-[#5542F6] hover:text-[#4535D6] transition-colors text-sm font-medium"
+                                        >
+                                            View Details
+                                        </button>
+                                    </div>
                                 </td>
                                 <td className="py-4 px-4">
                                     {/* Trash icon column - no header */}
@@ -216,9 +228,27 @@ export default function ApprovedLeads() {
                     setBookCallModalOpen(false);
                     setSelectedLead(null);
                 }}
+                onBooked={(data) => {
+                    setBookingData(data);
+                    setScheduledModalOpen(true);
+                }}
                 leadId={selectedLead?.id}
                 leadName={selectedLead?.name}
                 companyName={selectedLead?.company}
+            />
+            <ScheduledModal
+                isOpen={scheduledModalOpen}
+                onClose={() => {
+                    setScheduledModalOpen(false);
+                    setBookingData(null);
+                }}
+                selectedDate={bookingData?.selectedDate || null}
+                selectedTime={bookingData?.selectedTime || ''}
+                selectedTimezone={bookingData?.selectedTimezone || 'UTC'}
+            />
+            <ViewNotesModal
+                isOpen={viewNotesOpen}
+                onClose={() => setViewNotesOpen(false)}
             />
         </div>
     );

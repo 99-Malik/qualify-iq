@@ -9,9 +9,10 @@ interface PopUpProps {
     onClose: () => void;
     position: { top: number; left: number; alignRight?: boolean };
     leadId?: string;
+    onJourneyMap?: () => void;
 }
 
-export default function PopUp({ isOpen, onClose, position, leadId }: PopUpProps) {
+export default function PopUp({ isOpen, onClose, position, leadId, onJourneyMap }: PopUpProps) {
     const router = useRouter();
     const popupRef = useRef<HTMLDivElement>(null);
 
@@ -63,7 +64,12 @@ export default function PopUp({ isOpen, onClose, position, leadId }: PopUpProps)
                 View Details
             </button>
             <button
-                onClick={onClose}
+                onClick={() => {
+                    onClose();
+                    if (onJourneyMap) {
+                        onJourneyMap();
+                    }
+                }}
                 className="w-full text-left px-4 py-3 text-sm text-[#24282E] hover:bg-[#F7F8FA] transition-colors"
             >
                 Journey Map

@@ -9,6 +9,7 @@ import { SavedForm } from '@/components/Forms/utils/formStorage';
 import { SavedDocument, loadAllDocuments } from '@/components/Documents/utils/documentStorage';
 import { getDocumentTypeConfig, DocumentType } from '@/components/Documents/types';
 import ChangeModal from '@/components/CapturedLeads/Modals/ChangeModal';
+import ViewNotesModal from '@/components/CapturedLeads/Modals/ViewNotes';
 
 function LeadDetailsContent() {
     const router = useRouter();
@@ -21,6 +22,7 @@ function LeadDetailsContent() {
         id: string;
         type: 'Short Form' | 'Long Form' | 'document';
     } | null>(null);
+    const [viewNotesOpen, setViewNotesOpen] = useState(false);
 
     // Mock data - in real app, this would come from API
     const leadData = {
@@ -37,6 +39,7 @@ function LeadDetailsContent() {
         { id: 2, name: 'Meeting Name', date: '26 Sep 2025, 08:00 am', status: 'Generating...', statusColor: '#727A90' },
         { id: 3, name: 'Meeting Name', date: '26 Sep 2025, 08:00 am', hasViewNotes: true },
         { id: 4, name: 'Meeting Name', date: '26 Sep 2025, 08:00 am', hasViewNotes: true },
+        { id: 5, name: 'Meeting Name', date: '26 Sep 2025, 08:00 am', hasViewMeeting: true },
     ];
 
     // Load forms from localStorage
@@ -163,7 +166,7 @@ function LeadDetailsContent() {
     };
 
     return (
-        <AppLayout activeKey="captured">
+        <AppLayout activeKey="captured" hideSidebar={true}>
             {/* Breadcrumb */}
             <div className="mb-2">
                 <nav className="text-sm">
@@ -250,8 +253,20 @@ function LeadDetailsContent() {
                                     >
                                         {meeting.status}
                                     </span>
+                                ) : meeting.hasViewMeeting ? (
+                                    <button 
+                                        onClick={() => {
+                                            router.push(`/captured-leads/lead-details/view-meeting?id=${leadId}&meetingId=${meeting.id}`);
+                                        }}
+                                        className="px-4 py-2 text-sm font-medium text-[#2E2C34] bg-white border border-[#E4E7EC] rounded-sm hover:bg-[#F7F8FA] transition-colors whitespace-nowrap"
+                                    >
+                                        View Meeting
+                                    </button>
                                 ) : (
-                                    <button className="px-4 py-2 text-sm font-medium text-[#2E2C34] bg-white border border-[#E4E7EC] rounded-sm hover:bg-[#F7F8FA] transition-colors whitespace-nowrap">
+                                    <button 
+                                        onClick={() => setViewNotesOpen(true)}
+                                        className="px-4 py-2 text-sm font-medium text-[#2E2C34] bg-white border border-[#E4E7EC] rounded-sm hover:bg-[#F7F8FA] transition-colors whitespace-nowrap"
+                                    >
                                         View Notes
                                     </button>
                                 )}
@@ -396,6 +411,12 @@ function LeadDetailsContent() {
                     documents={documents}
                 />
             )}
+
+            {/* View Notes Modal */}
+            <ViewNotesModal
+                isOpen={viewNotesOpen}
+                onClose={() => setViewNotesOpen(false)}
+            />
         </AppLayout>
     );
 }
