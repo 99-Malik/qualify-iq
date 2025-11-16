@@ -55,14 +55,14 @@ export default function SideBar({ activeKey }: SideBarProps) {
                 { key: 'mailbox', path: '/mail-box', icon: (isActive: boolean) => <MailBoxIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Mail Box' },
                 { key: 'campaigns', icon: (isActive: boolean) => <EmailCampaignsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Email Campaigns' },
                 { key: 'warmup', path: '/warmup-emails', icon: (isActive: boolean) => <WarmUpEmailsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Warmup Emails' },
-                { key: 'domain', icon: (isActive: boolean) => <DomainSetupIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Domain Setup' }
+                { key: 'domain', path: '/domain-setup', icon: (isActive: boolean) => <DomainSetupIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Domain Setup' }
             ]
         },
         {
             header: 'System',
             entries: [
                 { key: 'calendar', icon: (isActive: boolean) => <CalendarIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Calendar' },
-                { key: 'settings', icon: (isActive: boolean) => <SettingsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Settings' }
+                { key: 'settings', path: '/settings', icon: (isActive: boolean) => <SettingsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Settings' }
             ]
         }
     ];

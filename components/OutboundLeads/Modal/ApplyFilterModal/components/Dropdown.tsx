@@ -10,6 +10,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     placeholder = 'Select option',
     label,
     className = '',
+    buttonClassName = '',
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -41,7 +42,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return (
         <div className={className}>
             {label && (
-                <label className="block text-sm text-[#727A90] mb-1">
+                <label className="block text-xs text-[#727A90] mb-1">
                     {label}
                 </label>
             )}
@@ -49,11 +50,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 <button
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
-                    className={`w-full pl-4 pr-1 py-2 border-2 ${isOpen ? 'border-[#D1CEFF]' : 'border-[#EBEAED]'} rounded-sm bg-white text-sm flex items-center justify-between transition-colors hover:border-[#D1CEFF] ${
+                    className={`w-full pl-4 pr-1 py-2 ${buttonClassName ? (isOpen ? 'border-[#5542F6]' : '') : `border ${isOpen ? 'border-[#5542F6]' : 'border-[#EBEAED]'} rounded-sm`} bg-white text-xs flex items-center justify-between transition-colors ${buttonClassName ? '' : 'hover:border-[#D1CEFF]'} ${
                         value ? 'text-[#24282E]' : 'text-[#727A90]'
-                    }`}
+                    } ${buttonClassName}`}
                 >
-                    <span className="text-left flex-1">{displayValue}</span>
+                    <span className="text-left flex-1 text-xs">{displayValue}</span>
                     <svg
                         width="20"
                         height="20"
@@ -76,10 +77,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
                                     key={option.value}
                                     type="button"
                                     onClick={() => handleSelect(option.value)}
-                                    className={`w-full px-4 py-3 text-left text-sm transition-colors ${
+                                    className={`w-full px-4 py-3 text-left text-xs transition-colors ${
                                         isSelected
-                                            ? 'bg-[#5542F6] text-white'
-                                            : 'bg-white text-[#24282E] hover:bg-[#F7F8FA]'
+                                            ? 'bg-[#5542F6] text-xs text-white'
+                                            : 'bg-white text-[#24282E] text-xs hover:bg-[#F7F8FA]'
                                     }`}
                                 >
                                     {option.label}

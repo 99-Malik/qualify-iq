@@ -23,6 +23,7 @@ export interface DropdownProps {
     placeholder?: string;
     label?: string;
     className?: string;
+    buttonClassName?: string;
 }
 
 export interface PillInputProps {

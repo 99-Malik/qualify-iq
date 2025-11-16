@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Bell, Mail, ChevronDown, Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type NavBarProps = {
     isLoggedIn?: boolean;
@@ -9,6 +10,8 @@ type NavBarProps = {
 };
 
 export default function NavBar({ isLoggedIn = false, hideLogo = false }: NavBarProps) {
+    const router = useRouter();
+    
     return (
         <nav className={`${isLoggedIn ? 'bg-[#FBFAFC]' : 'bg-white border-b border-[#E4E7EC]'} relative z-50`}>
             <div className="w-full pl-2 sm:pl-2 lg:pl-2 pr-8">
@@ -50,12 +53,15 @@ export default function NavBar({ isLoggedIn = false, hideLogo = false }: NavBarP
                     ) : (
                         <div className="flex items-center gap-2 sm:gap-4 lg:gap-8">
                             {/* Bell with dot */}
-                            <div className="relative">
+                            <button 
+                                onClick={() => router.push('/notifications')}
+                                className="relative cursor-pointer hover:opacity-80 transition-opacity"
+                            >
                                 <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M8 19.5C9.1 19.5 10 18.6 10 17.5H6C6 18.6 6.89 19.5 8 19.5ZM14 13.5V8.5C14 5.43 12.36 2.86 9.5 2.18V1.5C9.5 0.67 8.83 0 8 0C7.17 0 6.5 0.67 6.5 1.5V2.18C3.63 2.86 2 5.42 2 8.5V13.5L0 15.5V16.5H16V15.5L14 13.5Z" fill="#84818A" />
                                 </svg>
                                 <span className="absolute -top-1.5 -right-1.5 w-2 h-2 sm:w-2 sm:h-2 bg-[#FF3D00] rounded-full"></span>
-                            </div>
+                            </button>
                             {/* Mail with dot */}
                             <div className="relative">
                                 <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
