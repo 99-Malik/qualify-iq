@@ -54,6 +54,17 @@ export default function BookCallModal({
     const timezoneRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     const getAllTimezones = (): TimezoneOption[] => {
         try {
             const timezones = Intl.supportedValuesOf('timeZone');
@@ -280,14 +291,15 @@ export default function BookCallModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-4">
             <div
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={onClose}
             ></div>
 
-            <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl my-auto overflow-visible" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-start justify-between p-6 pb-4">
+            <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                <div className="relative bg-white rounded-lg shadow-xl flex flex-col max-h-full overflow-hidden">
+                    <div className="flex items-start justify-between p-6 pb-4 shrink-0">
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-[#2E2C34] mb-1">
                             Book Call
@@ -304,10 +316,12 @@ export default function BookCallModal({
                             <path d="M14.0007 2.33398C7.54898 2.33398 2.33398 7.54898 2.33398 14.0007C2.33398 20.4523 7.54898 25.6673 14.0007 25.6673C20.4523 25.6673 25.6673 20.4523 25.6673 14.0007C25.6673 7.54898 20.4523 2.33398 14.0007 2.33398ZM19.834 18.189L18.189 19.834L14.0007 15.6457L9.81232 19.834L8.16732 18.189L12.3557 14.0007L8.16732 9.81232L9.81232 8.16732L14.0007 12.3557L18.189 8.16732L19.834 9.81232L15.6457 14.0007L19.834 18.189Z" fill="#504F54" />
                         </svg>
 
-                    </button>
-                </div>
+                        </button>
+                    </div>
 
-                <div className="px-6 pb-6">
+                    {/* Scrollable Content */}
+                    <div className="overflow-y-auto flex-1 scroll-hidden">
+                        <div className="px-6 pb-6">
                     <div className="border border-[#E4E7EC] rounded-lg p-6 flex relative">
                         <div className="w-[60%] pr-6">
                             <h3 className="text-xl font-bold text-[#2E2C34] mb-4">Select a Date & Time</h3>
@@ -520,21 +534,24 @@ export default function BookCallModal({
                                     <p className="text-sm text-[#727A90]">Please select a date to view available time slots</p>
                                 </div>
                             )}
+                            </div>
+                        </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="flex justify-end px-6 pb-6 shrink-0">
+                            <button
+                                onClick={handleBookCall}
+                                disabled={!selectedTime}
+                                className={`px-6 py-2.5 rounded-sm font-medium text-sm transition-colors ${selectedTime
+                                        ? 'bg-[#5542F6] text-white hover:bg-[#4535D6] cursor-pointer'
+                                        : 'bg-[#E4E7EC] text-[#727A90] cursor-not-allowed'
+                                    }`}
+                            >
+                                Book Call
+                            </button>
                         </div>
                     </div>
-                </div>
-
-                <div className="flex justify-end px-6 pb-6">
-                    <button
-                        onClick={handleBookCall}
-                        disabled={!selectedTime}
-                        className={`px-6 py-2.5 rounded-sm font-medium text-sm transition-colors ${selectedTime
-                                ? 'bg-[#5542F6] text-white hover:bg-[#4535D6] cursor-pointer'
-                                : 'bg-[#E4E7EC] text-[#727A90] cursor-not-allowed'
-                            }`}
-                    >
-                        Book Call
-                    </button>
                 </div>
             </div>
         </div>

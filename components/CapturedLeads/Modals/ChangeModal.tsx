@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import FormPreview from '@/components/Forms/Components/FormPreview';
 import { SavedForm } from '@/components/Forms/utils/formStorage';
 import { SavedDocument } from '@/components/Documents/utils/documentStorage';
@@ -59,6 +59,17 @@ export default function ChangeModal({
         onClose();
     };
 
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const getTitle = () => {
@@ -90,17 +101,19 @@ export default function ChangeModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-4">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={onClose}
             ></div>
 
             {/* Modal */}
-            <div className="relative bg-white rounded-lg shadow-xl w-full max-w-6xl my-auto max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-                {/* Header */}
-                <div className="flex items-start justify-between px-6 py-4">
+            <div className="relative w-full max-w-6xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                {/* Modal Content */}
+                <div className="relative bg-white rounded-lg shadow-xl flex flex-col max-h-full overflow-hidden">
+                    {/* Header */}
+                    <div className="flex items-start justify-between px-6 py-4 shrink-0">
                     <div>
                         <h2 className="text-2xl font-bold text-[#24282E] mb-2">{getTitle()}</h2>
                         <p className="text-sm text-[#727A90]">{getDescription()}</p>
@@ -112,11 +125,11 @@ export default function ChangeModal({
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                    </button>
-                </div>
+                        </button>
+                    </div>
 
-                {/* Search Bar */}
-                <div className="px-6">
+                    {/* Search Bar */}
+                    <div className="px-6 shrink-0">
                     <div className="relative">
                         <svg
                             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#727A90]"
@@ -148,11 +161,13 @@ export default function ChangeModal({
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-10 pr-4 py-2.5 border-0 border-b border-[#E4E7EC] rounded-none text-sm text-[#24282E] placeholder-[#727A90] focus:outline-none focus:border-b-2 focus:border-[#5542F6] bg-transparent"
                         />
+                        </div>
                     </div>
-                </div>
 
-                {/* Content Area - Grid of Previews */}
-                <div className="flex-1 overflow-y-auto p-6">
+                    {/* Scrollable Content */}
+                    <div className="overflow-y-auto flex-1 scroll-hidden">
+                        {/* Content Area - Grid of Previews */}
+                        <div className="p-6">
                     {filteredItems.length === 0 ? (
                         <div className="text-center py-12">
                             <p className="text-sm text-[#727A90]">No items found</p>
@@ -259,18 +274,20 @@ export default function ChangeModal({
                                     </div>
                                 );
                             })}
+                            </div>
+                        )}
                         </div>
-                    )}
-                </div>
 
-                {/* Footer */}
-                <div className="flex justify-end p-6">
-                    <button
-                        onClick={handleSave}
-                        className="px-6 py-3 bg-[#5542F6] text-white font-semibold rounded-sm hover:bg-[#4535D6] transition-colors"
-                    >
-                        Save Changes
-                    </button>
+                        {/* Footer */}
+                        <div className="flex justify-end p-6 shrink-0">
+                            <button
+                                onClick={handleSave}
+                                className="px-6 py-3 bg-[#5542F6] text-white font-semibold rounded-sm hover:bg-[#4535D6] transition-colors"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

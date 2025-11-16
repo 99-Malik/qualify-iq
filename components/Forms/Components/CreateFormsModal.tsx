@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface CreateFormsModalProps {
     isOpen: boolean;
@@ -59,6 +59,17 @@ const formOptions: FormOption[] = [
 export default function CreateFormsModal({ isOpen, onClose, onCreate }: CreateFormsModalProps) {
     const [selectedForm, setSelectedForm] = useState<string>('short-inquiry');
 
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const handleCreate = () => {
@@ -69,17 +80,19 @@ export default function CreateFormsModal({ isOpen, onClose, onCreate }: CreateFo
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-4">
             {/* Backdrop */}
             <div 
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={onClose}
             ></div>
 
             {/* Modal */}
-            <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg my-auto">
-                {/* Header */}
-                <div className="flex items-start justify-between p-6 pb-4">
+            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                {/* Modal Content */}
+                <div className="relative bg-white rounded-lg shadow-xl flex flex-col max-h-full overflow-hidden">
+                    {/* Header */}
+                    <div className="flex items-start justify-between p-6 pb-4 shrink-0">
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-[#2E2C34] mb-1">
                             Select Form to Generate
@@ -97,10 +110,12 @@ export default function CreateFormsModal({ isOpen, onClose, onCreate }: CreateFo
                             <path d="M15 5L5 15M5 5L15 15" stroke="#84818A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
-                </div>
+                    </div>
 
-                {/* Form Options List */}
-                <div className="px-6 pb-6 space-y-3">
+                    {/* Scrollable Content */}
+                    <div className="overflow-y-auto flex-1 scroll-hidden">
+                        {/* Form Options List */}
+                        <div className="px-6 pb-6 space-y-3">
                     {formOptions.map((form) => {
                         const isSelected = selectedForm === form.id;
                         return (
@@ -129,17 +144,19 @@ export default function CreateFormsModal({ isOpen, onClose, onCreate }: CreateFo
                                 </div>
                             </button>
                         );
-                    })}
-                </div>
+                        })}
+                        </div>
 
-                {/* Footer with Create Button */}
-                <div className="flex justify-end px-6 pb-6">
-                    <button
-                        onClick={handleCreate}
-                        className="bg-[#5542F6] text-white px-6 py-2.5 rounded-sm font-medium text-sm hover:bg-[#4535D6] transition-colors"
-                    >
-                        Create
-                    </button>
+                        {/* Footer with Create Button */}
+                        <div className="flex justify-end px-6 pb-6">
+                            <button
+                                onClick={handleCreate}
+                                className="bg-[#5542F6] text-white px-6 py-2.5 rounded-sm font-medium text-sm hover:bg-[#4535D6] transition-colors"
+                            >
+                                Create
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface JourneyModalProps {
     isOpen: boolean;
@@ -73,6 +73,17 @@ export default function JourneyModal({
     onClose,
     leadId,
 }: JourneyModalProps) {
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const getIconColor = (color: string) => {
@@ -151,14 +162,15 @@ export default function JourneyModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-4">
             <div
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={onClose}
             ></div>
 
-            <div className="relative bg-white rounded-lg shadow-xl w-full max-w-2xl my-auto" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-start justify-between p-6 pb-4">
+            <div className="relative w-full max-w-2xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                <div className="relative bg-white rounded-lg shadow-xl flex flex-col max-h-full overflow-hidden">
+                    <div className="flex items-start justify-between p-6 pb-4 shrink-0">
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-[#2E2C34] mb-1">
                             View Journey Map
@@ -174,10 +186,12 @@ export default function JourneyModal({
                         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.9997 2.33398C7.54801 2.33398 2.33301 7.54898 2.33301 14.0007C2.33301 20.4523 7.54801 25.6673 13.9997 25.6673C20.4513 25.6673 25.6663 20.4523 25.6663 14.0007C25.6663 7.54898 20.4513 2.33398 13.9997 2.33398ZM19.833 18.189L18.188 19.834L13.9997 15.6457L9.81134 19.834L8.16634 18.189L12.3547 14.0007L8.16634 9.81232L9.81134 8.16732L13.9997 12.3557L18.188 8.16732L19.833 9.81232L15.6447 14.0007L19.833 18.189Z" fill="#504F54" />
                         </svg>
-                    </button>
-                </div>
+                        </button>
+                    </div>
 
-                <div className="px-6 pb-6">
+                    {/* Scrollable Content */}
+                    <div className="overflow-y-auto flex-1 scroll-hidden">
+                        <div className="px-6 pb-6">
                     <div className="border border-[#E4E7EC] rounded-lg p-6">
                         <div className="space-y-0 relative">
                             {journeyEvents.map((event, index) => {
@@ -201,6 +215,8 @@ export default function JourneyModal({
                                     </div>
                                 );
                             })}
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>

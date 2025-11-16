@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { format } from 'date-fns';
 import { format as formatTz } from 'date-fns-tz';
 
@@ -21,6 +21,17 @@ export default function ScheduledModal({
     selectedTimezone,
     personName = 'Khatchadour Israelyan',
 }: ScheduledModalProps) {
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const getFormattedDateTime = () => {
@@ -50,14 +61,15 @@ export default function ScheduledModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-4">
             <div
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={onClose}
             ></div>
 
-            <div className="relative bg-white rounded-lg shadow-xl w-full max-w-xl my-auto" onClick={(e) => e.stopPropagation()}>
-                <div className="flex flex-col items-center p-8">
+            <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                <div className="relative bg-white rounded-lg shadow-xl flex flex-col max-h-full overflow-hidden">
+                    <div className="flex flex-col items-center p-8 overflow-y-auto flex-1 scroll-hidden">
                     <div className="w-20 h-20 rounded-full bg-[#5542F6] flex items-center justify-center mb-6">
                         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect width="64" height="64" rx="32" fill="#5542F6" />
@@ -149,6 +161,7 @@ export default function ScheduledModal({
 
                                 </div>
                                 <span className="text-md text-[#84818A]">Web conferencing details to follow.</span>
+                            </div>
                             </div>
                         </div>
                     </div>
