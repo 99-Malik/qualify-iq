@@ -24,6 +24,8 @@ export interface DropdownProps {
     label?: string;
     className?: string;
     buttonClassName?: string;
+    openUpward?: boolean;
+    bg?: string;
 }
 
 export interface PillInputProps {

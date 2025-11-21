@@ -44,7 +44,7 @@ export default function SideBar({ activeKey }: SideBarProps) {
             header: 'Lead Management',
             entries: [
                 { key: 'forms-setup', path: '/forms-setup', icon: (isActive: boolean) => <ListIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Forms Setup' },
-                { key: 'templates', icon: (isActive: boolean) => <TemplatesIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Templates' },
+                { key: 'templates', path: '/email-templates', icon: (isActive: boolean) => <TemplatesIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Templates' },
                 { key: 'captured', path: '/captured-leads', icon: (isActive: boolean) => <CapturedLeadsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Captured Leads' },
                 { key: 'outbound', path: '/outbound-leads', icon: (isActive: boolean) => <OutboundLeadsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Outbound Leads' }
             ]
@@ -61,7 +61,7 @@ export default function SideBar({ activeKey }: SideBarProps) {
         {
             header: 'System',
             entries: [
-                { key: 'calendar', icon: (isActive: boolean) => <CalendarIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Calendar' },
+                { key: 'calendar', path: '/calendar', icon: (isActive: boolean) => <CalendarIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Calendar' },
                 { key: 'settings', path: '/settings', icon: (isActive: boolean) => <SettingsIcon width={25} height={25} color={isActive ? '#5542F6' : '#84818A'} />, label: 'Settings' }
             ]
         }
