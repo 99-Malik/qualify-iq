@@ -111,9 +111,10 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }: CreateGr
                             onClick={onClose}
                             className="flex items-center justify-center text-[#24282E] hover:text-[#FC3400] transition-colors shrink-0"
                         >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9987 2.33594C7.54703 2.33594 2.33203 7.55094 2.33203 14.0026C2.33203 20.4543 7.54703 25.6693 13.9987 25.6693C20.4504 25.6693 25.6654 20.4543 25.6654 14.0026C25.6654 7.55094 20.4504 2.33594 13.9987 2.33594ZM19.832 18.1909L18.187 19.8359L13.9987 15.6476L9.81036 19.8359L8.16536 18.1909L12.3537 14.0026L8.16536 9.81427L9.81036 8.16927L13.9987 12.3576L18.187 8.16927L19.832 9.81427L15.6437 14.0026L19.832 18.1909Z" fill="#504F54" />
                             </svg>
+
                         </button>
                     </div>
 
@@ -190,24 +191,24 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }: CreateGr
                                             </span>
 
                                             {/* Role Dropdown */}
-                                            <div className="flex-1">
+                                            <div className="flex-1 flex justify-end">
                                                 <Dropdown
                                                     value={member.role}
                                                     onChange={(value) => handleRoleChange(member.id, value)}
                                                     options={roleOptions}
                                                     placeholder="Select role"
                                                     bg="#EBEAED"
-                                                    className="w-full"
-                                                    buttonClassName="w-fit px-4 py-2.5 border border-[#E4E7EC] rounded-sm text-sm text-[#24282E] bg-[#F7F8FA]"
+                                                    className="w-1/2"
+                                                    buttonClassName="w-fit px-4 py-2.5 border border-[#E4E7EC] rounded-sm text-sm text-[#24282E] bg-white"
                                                 />
                                             </div>
 
                                             {/* Remove Button */}
                                             <button
                                                 onClick={() => handleRemoveMember(member.id)}
-                                                className="w-8 h-8 bg-[#5542F6] rounded-full flex items-center justify-center hover:bg-[#4535D6] transition-colors shrink-0"
+                                                className="w-4 h-4 bg-[#5542F6] rounded-full flex items-center justify-center hover:bg-[#4535D6] transition-colors shrink-0 ml-2"
                                             >
-                                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M9 3L3 9M3 3L9 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
                                             </button>

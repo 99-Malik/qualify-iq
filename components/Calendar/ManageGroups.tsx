@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CreateGroupModal from './Modal/CreateGroupModal';
+import GroupMembersModal from './Modal/GroupMembersModal';
 
 interface Group {
     id: string;
@@ -15,6 +16,8 @@ export default function ManageGroups() {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+    const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
 
     // Sample groups data - in real app, these would come from API
     const groups: Group[] = [
@@ -127,12 +130,24 @@ export default function ManageGroups() {
                         {/* View Availability Button and Members Section in Same Row */}
                         <div className="flex items-center gap-4">
                             {/* View Availability Button */}
-                            <button className="px-4 py-2 border border-[#D1CEFF] rounded-sm text-sm font-medium text-[#5542F6] hover:bg-[#E9E8FB] transition-colors bg-[#E9E8FB]">
+                            <button
+                                onClick={() => {
+                                    setSelectedGroup(group);
+                                    setIsMembersModalOpen(true);
+                                }}
+                                className="px-4 py-2 border border-[#D1CEFF] rounded-sm text-sm font-medium text-[#5542F6] hover:bg-[#E9E8FB] transition-colors bg-[#E9E8FB]"
+                            >
                                 View Availability
                             </button>
 
                             {/* Members Section */}
-                            <div className="flex items-center gap-2 bg-white border border-[#E4E7EC] rounded-lg px-3 py-2">
+                            <button
+                                onClick={() => {
+                                    setSelectedGroup(group);
+                                    setIsMembersModalOpen(true);
+                                }}
+                                className="flex items-center gap-2 bg-white border border-[#E4E7EC] rounded-lg px-3 py-2 hover:bg-[#F7F8FA] transition-colors cursor-pointer"
+                            >
                                 {/* Overlapping Avatars */}
                                 <div className="flex items-center -space-x-2">
                                     {[
@@ -154,7 +169,7 @@ export default function ManageGroups() {
                                 </div>
                                 {/* Member Count */}
                                 <span className="text-sm text-[#24282E]">{group.memberCount} Members</span>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -170,6 +185,49 @@ export default function ManageGroups() {
                     setIsCreateModalOpen(false);
                 }}
             />
+
+            {/* Group Members Modal */}
+            {selectedGroup && (
+                <GroupMembersModal
+                    isOpen={isMembersModalOpen}
+                    onClose={() => {
+                        setIsMembersModalOpen(false);
+                        setSelectedGroup(null);
+                    }}
+                    groupName={selectedGroup.name}
+                    members={[
+                        {
+                            id: '1',
+                            name: 'Elissa',
+                            email: 'elissa@example.com',
+                            avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop&crop=face',
+                            role: 'owner',
+                            isOwner: true,
+                        },
+                        {
+                            id: '2',
+                            name: 'Elena Perry',
+                            email: 'elena@example.com',
+                            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
+                            role: 'viewer',
+                        },
+                        {
+                            id: '3',
+                            name: 'Marcus Finch',
+                            email: 'marcus@example.com',
+                            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+                            role: 'editor',
+                        },
+                        {
+                            id: '4',
+                            name: 'Sofia Nguyen',
+                            email: 'sofia@example.com',
+                            avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
+                            role: 'admin',
+                        },
+                    ]}
+                />
+            )}
         </div>
     );
 }
